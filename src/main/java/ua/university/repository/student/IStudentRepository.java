@@ -11,7 +11,7 @@ import java.util.Optional;
  * Визначає базові операції доступу до даних.
  * </p>
  */
-public interface StudentRepository {
+public interface IStudentRepository {
 
     List<Student> findAll();
 
@@ -20,4 +20,6 @@ public interface StudentRepository {
     void save(Student student);
 
     void deleteById(String id);
+
+    //oid updateById(Student student);
 }

@@ -5,7 +5,7 @@ import java.util.Optional;
 
 // FOR FUTURE USAGES (Generics)
 // Generalization via Repository<T, ID> is planned in the next stages.
-public interface Repository<T, ID> {
+public interface IRepository<T, ID> {
 
     List<T> findAll();
 
@@ -14,4 +14,8 @@ public interface Repository<T, ID> {
     void save(T entity);
 
     void deleteById(ID id);
+
+    //void updateById(ID id);
+
+    //void show(T entity);
 }
