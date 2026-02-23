@@ -1,9 +1,10 @@
 package ua.university.service;
 
 import ua.university.domain.Student;
-import ua.university.repository.student.StudentRepository;
+import ua.university.repository.student.IStudentRepository;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Сервісний клас для роботи зі студентами.
@@ -15,13 +16,32 @@ import java.util.List;
 
 public class StudentService {
 
-    private final StudentRepository repository;
+    private final IStudentRepository repository;
     /**
      * Створює сервіс студентів.
      * @param repository репозиторій студентів
      */
-    public StudentService(StudentRepository repository) {
+    public StudentService(IStudentRepository repository) {
         this.repository = repository;
+    }
+
+    // --- CRUD ---
+
+    public void create(Student student) {
+        repository.save(student);
+    }
+
+    // for show()
+    public Optional<Student> findById(String id) {
+        return repository.findById(id);
+    }
+
+    public void delete(String id) {
+        repository.deleteById(id);
+    }
+
+    public void update(Student student) {
+        repository.save(student); // upsert
     }
 
     // ===== SEARCH =====
