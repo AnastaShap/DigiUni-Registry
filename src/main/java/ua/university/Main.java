@@ -1,9 +1,17 @@
 package ua.university;
 
 import ua.university.ui.CRUD;
+import ua.university.ui.MainMenu;
+import ua.university.util.ConsoleLogger;
 
 public class Main {
     public static void main(String[] args) {
+
+        // Menu test
+        MainMenu mainMenu = new MainMenu(new ConsoleLogger());
+        mainMenu.run();
+
+        /*
         boolean running = true;
 
         while (running) {
@@ -25,6 +33,6 @@ public class Main {
                 case 5 -> running = false;
             }
         }
-        System.out.println("Program finished.");
+        System.out.println("Program finished.");*/
     }
 }
