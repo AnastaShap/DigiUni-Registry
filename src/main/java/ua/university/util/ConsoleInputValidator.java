@@ -10,7 +10,7 @@ import java.util.Scanner;
  * </p>
  */
 
-public class InputValidator {
+public class ConsoleInputValidator {
 
     /**
      * Зчитує непорожній рядок з консолі.
@@ -26,7 +26,21 @@ public class InputValidator {
             if (!input.isEmpty()) {
                 return input;
             }
-            System.out.println("Поле не може бути порожнім.");
+            System.out.println("Error: field cannot be empty.");
+        }
+    }
+
+    public static int intInRange(Scanner sc, int min, int max) {
+        int value;
+        while (true) {
+            try {
+                value = Integer.parseInt(sc.nextLine());
+                if (value < min || value > max)
+                    System.out.println("Error: value must be between " + min + " and " + max);
+                else return value;
+            } catch (NumberFormatException e) {
+                System.out.println("Error: enter a number.");
+            }
         }
     }
 
@@ -38,15 +52,15 @@ public class InputValidator {
     public static int readCourse(Scanner sc) {
         while (true) {
             try {
-                System.out.print("Введіть курс (1-6): ");
+                System.out.print("Enter course (1-6): ");
                 int course = Integer.parseInt(sc.nextLine());
 
                 if (course >= 1 && course <= 6) {
                     return course;
                 }
-                System.out.println("Курс має бути від 1 до 6.");
+                System.out.println("Course must be form 1 to 6.");
             } catch (NumberFormatException e) {
-                System.out.println("Введіть число.");
+                System.out.println("Enter positive number, please.");
             }
         }
     }
@@ -61,15 +75,15 @@ public class InputValidator {
     public static int readMenuOption(Scanner sc, int min, int max) {
         while (true) {
             try {
-                System.out.print("Ваш вибір: ");
+                System.out.print("Your choice: ");
                 int option = Integer.parseInt(sc.nextLine());
 
                 if (option >= min && option <= max) {
                     return option;
                 }
-                System.out.printf("Введіть число від %d до %d.%n", min, max);
+                System.out.printf("Enter number from %d to %d.%n", min, max);
             } catch (NumberFormatException e) {
-                System.out.println("Введіть коректне число.");
+                System.out.println("Enter valid number, please.");
             }
         }
     }
@@ -82,14 +96,16 @@ public class InputValidator {
      */
     public static String readGroup(Scanner sc) {
         while (true) {
-            System.out.print("Введіть групу (напр. ІПЗ-1): ");
+            System.out.print("Enter the group (e.g. ІПЗ-1):");
             String input = sc.nextLine().trim();
 
             if (input.matches("[A-Za-zА-Яа-яІіЇїЄє]{2,5}-\\d{2}")) {
                 return input;
             }
+            else{
+                System.out.println("Incorrect group format.");
+            }
 
-            System.out.println("Некоректний формат групи.");
         }
     }
 
