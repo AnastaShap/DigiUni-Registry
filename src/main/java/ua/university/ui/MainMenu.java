@@ -41,7 +41,7 @@ public  class MainMenu {
 
             switch (option) {
                 case 1 -> studentMenu.createStudent();
-                case 2 -> studentMenu.findStudentsByFullName();
+                case 2 -> studentMenu.showStudents();
                 case 3 -> studentMenu.updateStudent();
                 case 4 -> studentMenu.deleteStudent();
                 case 0 -> {

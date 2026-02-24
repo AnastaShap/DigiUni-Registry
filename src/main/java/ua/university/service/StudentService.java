@@ -26,12 +26,15 @@ public class StudentService {
     }
 
     // --- CRUD ---
-
     public void create(Student student) {
+        // Перевірка, чи вже існує студент з таким ID
+        if (repository.findById(student.getId()).isPresent()) {
+            throw new RuntimeException("Студент з ID " + student.getId() + " вже існує!");
+        }
         repository.save(student);
     }
 
-    // for show()
+    // helper for show()
     public Optional<Student> findById(String id) {
         return repository.findById(id);
     }
@@ -103,4 +106,41 @@ public class StudentService {
                         .thenComparing(Student::getFirstName))
                 .toList();
     }
+
+    public List<Student> getAllStudents() {
+        return repository.findAll();
+    }
+
+    public void changeCourse(String id, int newCourse) {
+
+        Student student = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+
+        student.setCourse(newCourse);
+
+        repository.save(student);
+    }
+
+    public void changeGroup(String id, String newGroup) {
+
+        Student student = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+
+        student.setGroup(newGroup);
+
+        repository.save(student);
+    }
+
+    public void changeName(String id, String lastName, String firstName, String middleName) {
+        Student student = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+
+        student.setLastName(lastName);
+        student.setFirstName(firstName);
+        student.setMiddleName(middleName);
+
+        repository.save(student);
+    }
+
+
 }
