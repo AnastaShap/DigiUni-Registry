@@ -34,4 +34,11 @@ public class Department {
         return code + " - " + name + ", location: " + location;
     }
 
+    public String getCode() {
+        return code;
+    }
+
+    public void setHead(Teacher head) {
+        this.head = head;
+    }
 }
