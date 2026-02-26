@@ -31,6 +31,10 @@ public class Faculty {
         return departments;
     }
 
+    public void setDean(Teacher dean) {
+        this.dean = dean;
+    }
+
     @Override
     public String toString() {
         return code + " - " + name + " (" + shortName + "), dean: " +
