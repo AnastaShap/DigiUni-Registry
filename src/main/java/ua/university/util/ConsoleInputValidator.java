@@ -90,22 +90,23 @@ public class ConsoleInputValidator {
 
 
     /**
-     * Зчитує назву групи за заданим шаблоном.
-
-     * @return назва групи у коректному форматі
+     * Reads the group name following the specific pattern.
+     * Pattern: 2-5 letters, a hyphen, and 1-2 digits.
+     *
+     * @param sc Scanner for input
+     * @return validated group name
      */
     public static String readGroup(Scanner sc) {
         while (true) {
-            System.out.print("Enter the group (e.g. ІПЗ-1):");
+            System.out.print("Enter the group (e.g., ІПЗ-1): ");
             String input = sc.nextLine().trim();
 
-            if (input.matches("[A-Za-zА-Яа-яІіЇїЄє]{2,5}-\\d{2}")) {
+            // Updated regex: \\d{1,2} allows both ІПЗ-1 and ІПЗ-11
+            if (input.matches("^[A-Za-zА-Яа-яІіЇїЄє]{2,5}-\\d{1,2}$")) {
                 return input;
+            } else {
+                System.out.println("Incorrect group format. Please use the format 'Letters-Number' (e.g., ІПЗ-1).");
             }
-            else{
-                System.out.println("Incorrect group format.");
-            }
-
         }
     }
 
