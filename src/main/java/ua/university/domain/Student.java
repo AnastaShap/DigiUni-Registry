@@ -8,6 +8,7 @@ import java.util.Objects;
 
 public class Student extends Person {
     private final String studentId;
+    private String departmentId;
     private int course;       // 1-6
     private String group;     // назва групи, String
     private int entryYear;
@@ -16,10 +17,11 @@ public class Student extends Person {
 
     public Student(String id, String lastName, String firstName, String middleName,
                    LocalDate birthDate, String email, String phone,
-                   String studentId, int course, String group,
+                   String studentId, String departmentId, int course, String group,
                    int entryYear, StudyForm studyForm, StudentStatus status) {
         super(id, lastName, firstName, middleName, birthDate, email, phone);
         this.studentId = studentId;
+        this.departmentId = departmentId;
         this.course = course;
         this.group = group;
         this.entryYear = entryYear;
@@ -30,6 +32,10 @@ public class Student extends Person {
     public String getStudentId() {
         return studentId;
     }
+
+    public String getDepartmentId() { return departmentId; }
+
+    public void setDepartmentId(String departmentId) { this.departmentId = departmentId; }
 
     public int getCourse() {
         return course;
@@ -70,6 +76,11 @@ public class Student extends Person {
 
     public void setStatus(StudentStatus status) {
         this.status = status;
+    }
+
+    public boolean isAdult(Student s) {
+        return s.getBirthDate()
+                .isBefore(LocalDate.now().minusYears(18));
     }
 
     @Override
