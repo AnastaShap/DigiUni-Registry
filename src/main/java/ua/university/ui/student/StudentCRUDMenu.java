@@ -1,18 +1,22 @@
 package ua.university.ui.student;
 
+import ua.university.domain.Department;
 import ua.university.domain.Student;
 import ua.university.domain.enums.StudentStatus;
 import ua.university.domain.enums.StudyForm;
+import ua.university.service.DepartmentService;
 import ua.university.service.StudentService;
 import ua.university.util.ConsoleInputValidator;
 import ua.university.util.ILogger;
 import ua.university.util.StudentConsoleView;
 
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class StudentCRUDMenu {
     private final StudentService studentService;
+    private final DepartmentService departmentService;
     private final ILogger logger;
     private final Scanner scanner;
     private final StudentConsoleView view = new StudentConsoleView();
@@ -20,8 +24,9 @@ public class StudentCRUDMenu {
     private final StudentInputHandler inputHandler;
     private final StudentSearchAndReportManager searchManager;
 
-    public StudentCRUDMenu(StudentService studentService, ILogger logger, Scanner scanner) {
+    public StudentCRUDMenu(StudentService studentService, DepartmentService departmentService, ILogger logger, Scanner scanner) {
         this.studentService = studentService;
+        this.departmentService = departmentService;
         this.logger = logger;
         this.scanner = scanner;
         this.inputHandler = new StudentInputHandler(scanner, view);
@@ -58,16 +63,33 @@ public class StudentCRUDMenu {
 
         view.printMessage("Enter Student ID: ");
         String sId = ConsoleInputValidator.readNonEmptyString(scanner);
-        //view.printMessage("Enter Department ID: ");
-        String deptId = ConsoleInputValidator.readNonEmptyString(scanner);
 
-        int year = inputHandler.readInt("Entry Study Year (e.g., 2024): ");
+        int entryYear = inputHandler.readInt("Entry Study Year (e.g., 2024): ");
 
         var form = inputHandler.readStudyForm();
         var status = inputHandler.readStudentStatus();
 
-        Student student = new Student(id, lastName, firstName, middleName, bDate, email, phone,
-                sId, course, group, year, form, status);
+        /// TO-DO: Transfer Department logic
+        view.printMessage("Enter Department Code (e.g., CS-01):");
+        String deptCode = ConsoleInputValidator.readNonEmptyString(scanner);
+
+        // Шукаємо кафедру через сервіс
+        Optional<Department> deptOptional = departmentService.findByCode(deptCode);
+
+        if (deptOptional.isEmpty()) {
+            logger.info("Error: Department with code " + deptCode + " not found!");
+            return; // Зупиняємо створення, якщо кафедри не існує
+        }
+
+        Department department = deptOptional.get();
+
+        // Створюємо студента, передаючи об'єкт кафедри
+        Student student = new Student(
+                id, lastName, firstName, middleName,
+                bDate, email, phone, sId,
+                department,
+                course, group, entryYear, form, status
+        );
         try {
             studentService.create(student);
             logger.info("Student created successfully.");
