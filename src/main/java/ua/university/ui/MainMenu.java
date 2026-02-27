@@ -1,14 +1,11 @@
 package ua.university.ui;
 
-import ua.university.domain.Student;
-import ua.university.domain.enums.StudentStatus;
-import ua.university.domain.enums.StudyForm;
 import ua.university.repository.student.InMemoryStudentRepository;
 import ua.university.service.StudentService;
+import ua.university.ui.student.StudentCRUDMenu;
 import ua.university.util.ConsoleInputValidator;
 import ua.university.util.ILogger;
 
-import java.time.LocalDate;
 import java.util.Scanner;
 
 /**
@@ -21,7 +18,7 @@ import java.util.Scanner;
  */
 
 public  class MainMenu {
-    private final StudentMenu studentMenu;
+    private final StudentCRUDMenu studentMenu;
     private final Scanner scanner;
 
     public MainMenu(ILogger logger) {
@@ -29,37 +26,32 @@ public  class MainMenu {
 
         InMemoryStudentRepository repo = new InMemoryStudentRepository();
         StudentService studentService = new StudentService(repo);
-        this.studentMenu = new StudentMenu(studentService, logger, scanner);
+        this.studentMenu = new StudentCRUDMenu(studentService, logger, scanner);
         repo.loadTestData(repo);
     }
 
     public void run() {
         while (true) {
             printMenu();
-
-            int option = ConsoleInputValidator.readMenuOption(scanner, 0, 4);
-
+            int option = ConsoleInputValidator.readMenuOption(scanner, 0, 5);
             switch (option) {
                 case 1 -> studentMenu.createStudent();
                 case 2 -> studentMenu.showStudents();
                 case 3 -> studentMenu.updateStudent();
                 case 4 -> studentMenu.deleteStudent();
-                case 0 -> {
-                    System.out.println("Program finished.");
-                    return;
-                }
+                case 5 -> studentMenu.searchMenu();
+                case 0 -> { return; }
             }
         }
     }
 
     private void printMenu() {
-
         System.out.println("""
-                    --- CRUD MENU ---
            1- Add Student
-           2- List Students
+           2- List/Sort Students
            3- Update Student
            4- Delete Student
+           5- Search/Filter
            0- Exit""");
     }
 
