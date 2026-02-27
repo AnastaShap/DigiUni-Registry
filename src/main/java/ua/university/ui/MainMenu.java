@@ -1,6 +1,7 @@
 package ua.university.ui;
 
 import ua.university.repository.student.InMemoryStudentRepository;
+import ua.university.service.DepartmentService;
 import ua.university.service.StudentService;
 import ua.university.ui.student.StudentCRUDMenu;
 import ua.university.util.ConsoleInputValidator;
@@ -18,7 +19,7 @@ import java.util.Scanner;
  */
 
 public  class MainMenu {
-    private final StudentCRUDMenu studentMenu;
+    private final StudentCRUDMenu studentMenu;;
     private final Scanner scanner;
 
     public MainMenu(ILogger logger) {
@@ -26,8 +27,10 @@ public  class MainMenu {
 
         InMemoryStudentRepository repo = new InMemoryStudentRepository();
         StudentService studentService = new StudentService(repo);
-        this.studentMenu = new StudentCRUDMenu(studentService, logger, scanner);
-        repo.loadTestData(repo);
+        DepartmentService departmentService = new DepartmentService();
+        this.studentMenu = new StudentCRUDMenu(studentService,departmentService, logger, scanner);
+        // Only for demo test
+        //repo.loadTestData(repo);
     }
 
     public void run() {
