@@ -14,8 +14,4 @@ public interface IRepository<T, ID> {
     void save(T entity);
 
     void deleteById(ID id);
-
-    //void updateById(ID id);
-
-    //void show(T entity);
 }
