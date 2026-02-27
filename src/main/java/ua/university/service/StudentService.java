@@ -1,5 +1,6 @@
 package ua.university.service;
 
+import ua.university.domain.Department;
 import ua.university.domain.Student;
 import ua.university.repository.student.IStudentRepository;
 import java.util.Comparator;
@@ -84,6 +85,15 @@ public class StudentService {
                 .toList();
     }
 
+   /* /**
+     * Finds all students belonging to a specific department.
+
+    public List<Student> findByDepartment(String departmentId) {
+        return repository.findAll().stream()
+                .filter(s -> s.getDepartmentId().equals(departmentId))
+                .toList();
+    }*/
+
     // ===== REPORTS =====
 
     /**
@@ -141,6 +151,12 @@ public class StudentService {
 
         repository.save(student);
     }
+    public void transferToDepartment(String studentId, Department newDepartment) {
+        Student student = repository.findById(studentId)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
 
+        student.setDepartment(newDepartment); // Business logic for transfer
+        repository.save(student);
+    }
 
 }
