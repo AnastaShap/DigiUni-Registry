@@ -8,7 +8,7 @@ import java.util.Objects;
 
 public class Student extends Person {
     private final String studentId;
-    private String departmentId;
+    private Department department;
     private int course;       // 1-6
     private String group;     // назва групи, String
     private int entryYear;
@@ -17,11 +17,11 @@ public class Student extends Person {
 
     public Student(String id, String lastName, String firstName, String middleName,
                    LocalDate birthDate, String email, String phone,
-                   String studentId, String departmentId, int course, String group,
+                   String studentId,Department department, int course, String group,
                    int entryYear, StudyForm studyForm, StudentStatus status) {
         super(id, lastName, firstName, middleName, birthDate, email, phone);
         this.studentId = studentId;
-        this.departmentId = departmentId;
+        this.department = department; // Link to department
         this.course = course;
         this.group = group;
         this.entryYear = entryYear;
@@ -33,9 +33,13 @@ public class Student extends Person {
         return studentId;
     }
 
-    public String getDepartmentId() { return departmentId; }
+    public Department getDepartment() {
+        return department;
+    }
 
-    public void setDepartmentId(String departmentId) { this.departmentId = departmentId; }
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
 
     public int getCourse() {
         return course;
