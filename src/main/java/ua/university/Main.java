@@ -9,4 +9,5 @@ public class Main {
         MainMenu mainMenu = new MainMenu(new ConsoleLogger());
         mainMenu.run();
     }
+
 }
