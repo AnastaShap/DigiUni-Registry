@@ -1,0 +1,30 @@
+# Maven
+/target/
+
+# IntelliJ IDEA
+/.idea/
+*.iml
+
+# Eclipse
+.classpath
+.project
+.settings/
+.apt_generated
+.factorypath
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+
+# VS Code
+.vscode/
+
+# OS
+.DS_Store
+
+# Compiled files
+out/
