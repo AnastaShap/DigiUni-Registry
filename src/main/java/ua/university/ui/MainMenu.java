@@ -2,7 +2,10 @@ package ua.university.ui;
 
 import ua.university.domain.Department;
 import ua.university.domain.Faculty;
+import ua.university.domain.Student;
 import ua.university.domain.enums.Role;
+import ua.university.domain.enums.StudentStatus;
+import ua.university.domain.enums.StudyForm;
 import ua.university.exception.AccessDeniedException;
 import ua.university.repository.IRepository;
 import ua.university.repository.InMemoryDepartmentRepository;
@@ -18,13 +21,14 @@ import ua.university.ui.student.StudentCRUDMenu;
 import ua.university.util.ConsoleInputValidator;
 import ua.university.util.ILogger;
 
+import java.time.LocalDate;
 import java.util.Scanner;
 import java.util.Set;
 
 public class MainMenu {
     private final DepartmentService departmentService;
     private final FacultyService facultyService;
-    //private final StudentService studentService;
+    private final StudentService studentService;
 
     private final StudentCRUDMenu studentMenu;
     private final FacultyCRUDMenu facultyMenu;
@@ -40,7 +44,7 @@ public class MainMenu {
         this.accessManager = new AccessManager();
 
         InMemoryStudentRepository repo = new InMemoryStudentRepository();
-        StudentService studentService = new StudentService(repo);
+        this.studentService = new StudentService(repo);
 
         IRepository<Faculty, String> faculRepo = new InMemoryFacultyRepository();
         this.facultyService = new FacultyService(faculRepo);
@@ -110,5 +114,73 @@ public class MainMenu {
         System.out.println("12- Update Department (manager)");
         System.out.println("13- Delete Department (manager)");
         System.out.println("0- Exit");
+    }
+
+    // TEST DATA
+
+    private void seedData() {
+        // Факультети
+        Faculty fit = new Faculty("FIT", "Faculty of IT", "FIT", null, "fit@ukma.edu.ua");
+        facultyService.create(fit);
+
+        Faculty fgsn = new Faculty("FGSN", "Faculty of Humanities", "FGSN", null, "fgsn@ukma.edu.ua");
+        facultyService.create(fgsn);
+
+        Faculty fe = new Faculty("FE", "FACULTY OF ECONOMICS", "FGSN", null, "fgsn@ukma.edu.ua");
+        facultyService.create(fe);
+
+        // Кафедри
+        Department informatics = new Department("INF", "Informatics", fit, null, "Building 1");
+        departmentService.create(informatics);
+        facultyService.addDepartment("FIT", informatics);
+
+        Department depMath = new Department("MATH", "Math department", fit, null, "Building 1");
+        departmentService.create(depMath);
+        facultyService.addDepartment("FIT", depMath);
+
+        Department finance = new Department("FIN", "Finance", fit, null, "Building 1");
+        departmentService.create(finance);
+        facultyService.addDepartment("FE", finance);
+
+        // Студентів
+        Student student1 = new Student(
+                "1", "Шевченко", "Іван", "Петрович",
+                LocalDate.of(2003, 5, 10),
+                "ivan@ukma.edu.ua", "0500000001",
+                "S001", 2, "ІПЗ-2",
+                2022, StudyForm.BUDGET, StudentStatus.STUDYING
+        );
+        studentService.create(student1);
+        student1.setDepartment(informatics);
+
+        Student student4 = new Student(
+                "1", "Ткач", "Марк", "Олександрович",
+                LocalDate.of(2003, 4, 17),
+                "ivan@ukma.edu.ua", "0500000002",
+                "S004", 2, "ІПЗ-2",
+                2022, StudyForm.BUDGET, StudentStatus.STUDYING
+        );
+        studentService.create(student4);
+        student1.setDepartment(informatics);
+
+        Student student2 = new Student(
+                "2", "Коваленко", "Анна", "Олегівна",
+                LocalDate.of(2004, 3, 20),
+                "anna@ukma.edu.ua", "0500000002",
+                "S002", 1, "AВІС-1",
+                2023, StudyForm.CONTRACT, StudentStatus.STUDYING
+        );
+        studentService.create(student2);
+        student1.setDepartment(informatics);
+
+        Student student3 = new Student(
+                "3", "Бондар", "Максим", "Ігорович",
+                LocalDate.of(2002, 11, 2),
+                "max@ukma.edu.ua", "0500000003",
+                "S003", 2, "КН-2",
+                2021, StudyForm.BUDGET, StudentStatus.STUDYING
+        );
+        studentService.create(student3);
+        student1.setDepartment(informatics);
     }
 }
