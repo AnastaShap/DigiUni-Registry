@@ -5,50 +5,55 @@ import ua.university.domain.Faculty;
 import ua.university.domain.Teacher;
 import ua.university.exception.DuplicateEntityException;
 import ua.university.exception.FacultyNotFoundException;
+import ua.university.repository.IRepository;
 
 import java.util.*;
 
 public class FacultyService {
 
-    private final Map<String, Faculty> faculties = new HashMap<>();
+    private final IRepository<Faculty, String> repository;
+
+    public FacultyService(IRepository<Faculty, String> repository) {
+        this.repository = repository;
+    }
+
+    private Faculty getOrThrow(String code) {
+        return repository.findById(code)
+                .orElseThrow(() -> new FacultyNotFoundException(code));
+    }
 
     public void create(Faculty faculty) {
         Objects.requireNonNull(faculty);
-
-        if (faculties.containsKey(faculty.getCode())) {
+        if (repository.findById(faculty.getCode()).isPresent()) {
             throw new DuplicateEntityException("Faculty already exists: " + faculty.getCode());
         }
-
-        faculties.put(faculty.getCode(), faculty);
-    }
-
-    public Optional<Faculty> findByCode(String code) {
-        return Optional.ofNullable(faculties.get(code));
-    }
-
-    public List<Faculty> findAll() {
-        return new ArrayList<>(faculties.values());
-    }
-
-    public void delete(String code) {
-        if (faculties.remove(code) == null) {
-            throw new FacultyNotFoundException(code);
-        }
+        repository.save(faculty);
     }
 
     public void update(Faculty faculty) {
         Objects.requireNonNull(faculty);
-        faculties.put(faculty.getCode(), faculty);
+        repository.save(faculty);
+    }
+
+    public void delete(String code) {
+        getOrThrow(code);
+        repository.deleteById(code);
+    }
+
+    public List<Faculty> findAll() {
+        return repository.findAll();
+    }
+
+    public Optional<Faculty> findByCode(String code) {
+        return repository.findById(code);
     }
 
     public void assignDean(String facultyCode, Teacher dean) {
-        Faculty faculty = getFacultyOrThrow(facultyCode);
-        faculty.setDean(dean);
+        getOrThrow(facultyCode).setDean(dean);
     }
 
     public void addDepartment(String facultyCode, Department department) {
-        Faculty faculty = getFacultyOrThrow(facultyCode);
-        faculty.getDepartments().add(department);
+        getOrThrow(facultyCode).getDepartments().add(department);
     }
 
     public void changeName(String facultyCode, String newName) {
