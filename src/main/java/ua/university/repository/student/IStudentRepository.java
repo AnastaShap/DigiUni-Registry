@@ -1,9 +1,7 @@
 package ua.university.repository.student;
 
 import ua.university.domain.Student;
-
-import java.util.List;
-import java.util.Optional;
+import ua.university.repository.IRepository;
 
 /**
  * Репозиторій для роботи зі студентами.
@@ -11,15 +9,9 @@ import java.util.Optional;
  * Визначає базові операції доступу до даних.
  * </p>
  */
-public interface IStudentRepository {
+public interface IStudentRepository extends IRepository<Student, String> {
 
-    List<Student> findAll();
-
-    Optional<Student> findById(String id);
-
-    void save(Student student);
-
-    void deleteById(String id);
-
-    //oid updateById(Student student);
+    // специфічні методи для студентів,
+    // якщо такі будуть (наприклад, знайти за групою).
+    // Базові CRUD методи вже є в IRepository.
 }
