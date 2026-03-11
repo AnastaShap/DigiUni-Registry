@@ -4,6 +4,8 @@ import ua.university.domain.Department;
 import ua.university.domain.Faculty;
 import ua.university.domain.Student;
 import ua.university.domain.Teacher;
+import ua.university.exception.DepartmentNotFoundException;
+import ua.university.exception.DuplicateEntityException;
 
 import java.util.*;
 
@@ -11,15 +13,13 @@ public class DepartmentService {
 
     private final Map<String, Department> departments = new HashMap<>();
 
-    // ===== CREATE =====
-
     public void create(Department department) {
         Objects.requireNonNull(department);
-
+        if (departments.containsKey(department.getCode())) {
+            throw new DuplicateEntityException("Department already exists: " + department.getCode());
+        }
         departments.put(department.getCode(), department);
     }
-
-    // ===== FIND =====
 
     public Optional<Department> findByCode(String code) {
         return Optional.ofNullable(departments.get(code));
@@ -31,7 +31,7 @@ public class DepartmentService {
 
     public void delete(String code) {
         if (departments.remove(code) == null) {
-            throw new RuntimeException("Department not found");
+            throw new DepartmentNotFoundException(code);
         }
     }
 
@@ -40,26 +40,18 @@ public class DepartmentService {
         departments.put(department.getCode(), department);
     }
 
-    // ===== BUSINESS =====
-
     public void addStudent(String departmentCode, Student student) {
-
         Department dep = getDepartmentOrThrow(departmentCode);
-
         dep.getStudents().add(student);
     }
 
     public void addTeacher(String departmentCode, Teacher teacher) {
-
         Department dep = getDepartmentOrThrow(departmentCode);
-
         dep.getTeachers().add(teacher);
     }
 
     public void assignHead(String departmentCode, Teacher teacher) {
-
         Department dep = getDepartmentOrThrow(departmentCode);
-
         dep.setHead(teacher);
     }
 
@@ -78,10 +70,8 @@ public class DepartmentService {
         dep.setFaculty(faculty);
     }
 
-    // ===== INTERNAL =====
-
     private Department getDepartmentOrThrow(String code) {
         return findByCode(code)
-                .orElseThrow(() -> new RuntimeException("Department not found"));
+                .orElseThrow(() -> new DepartmentNotFoundException(code));
     }
 }

@@ -2,6 +2,7 @@ package ua.university.service;
 
 import ua.university.domain.Department;
 import ua.university.domain.Student;
+import ua.university.exception.DuplicateEntityException;
 import ua.university.exception.StudentNotFoundException;
 import ua.university.repository.student.IStudentRepository;
 import java.util.Comparator;
@@ -32,7 +33,7 @@ public class StudentService {
     public void create(Student student) {
         // Перевірка, чи вже існує студент з таким ID
         if (repository.findById(student.getId()).isPresent()) {
-            throw new RuntimeException("Студент з ID " + student.getId() + " вже існує!");
+            throw new DuplicateEntityException("Студент з ID " + student.getId() + " вже існує!");
         }
         repository.save(student);
     }
@@ -144,7 +145,7 @@ public class StudentService {
     public void changeCourse(String id, int newCourse) {
 
         Student student = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Student not found"));
+                .orElseThrow(() -> new StudentNotFoundException(id));
 
         student.setCourse(newCourse);
 
@@ -154,7 +155,7 @@ public class StudentService {
     public void changeGroup(String id, String newGroup) {
 
         Student student = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Student not found"));
+                .orElseThrow(() -> new StudentNotFoundException(id));
 
         student.setGroup(newGroup);
 
@@ -163,7 +164,7 @@ public class StudentService {
 
     public void changeName(String id, String lastName, String firstName, String middleName) {
         Student student = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Student not found"));
+                .orElseThrow(() -> new StudentNotFoundException(id));
 
         student.setLastName(lastName);
         student.setFirstName(firstName);
@@ -173,7 +174,7 @@ public class StudentService {
     }
     public void transferToDepartment(String studentId, Department newDepartment) {
         Student student = repository.findById(studentId)
-                .orElseThrow(() -> new RuntimeException("Student not found"));
+                .orElseThrow(() -> new StudentNotFoundException(studentId));
 
         student.setDepartment(newDepartment); // Business logic for transfer
         repository.save(student);

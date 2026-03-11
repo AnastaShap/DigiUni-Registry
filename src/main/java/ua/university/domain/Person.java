@@ -34,11 +34,14 @@ public abstract class Person {
         return lastName;
     }
 
-    public void setLastName(String s) {
+    public void setLastName(String lastName) {
         this.lastName = lastName;
     }
     public void setFullName(String fullName) {
-        this.lastName = lastName;
+        String[] parts = fullName == null ? new String[0] : fullName.trim().split("\\s+");
+        if (parts.length > 0) this.lastName = parts[0];
+        if (parts.length > 1) this.firstName = parts[1];
+        if (parts.length > 2) this.middleName = parts[2];
     }
 
     public String getMiddleName() {
@@ -46,7 +49,7 @@ public abstract class Person {
     }
 
     public void setMiddleName(String middleName) {
-        this.middleName = lastName;
+        this.middleName = middleName;
     }
 
     public String getFirstName() {
