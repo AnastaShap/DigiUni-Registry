@@ -1,7 +1,12 @@
 package ua.university.ui;
 
+import ua.university.domain.Department;
+import ua.university.domain.Faculty;
 import ua.university.domain.enums.Role;
 import ua.university.exception.AccessDeniedException;
+import ua.university.repository.IRepository;
+import ua.university.repository.InMemoryDepartmentRepository;
+import ua.university.repository.InMemoryFacultyRepository;
 import ua.university.repository.student.InMemoryStudentRepository;
 import ua.university.security.AccessManager;
 import ua.university.security.AuthService;
@@ -17,6 +22,10 @@ import java.util.Scanner;
 import java.util.Set;
 
 public class MainMenu {
+    private final DepartmentService departmentService;
+    private final FacultyService facultyService;
+    //private final StudentService studentService;
+
     private final StudentCRUDMenu studentMenu;
     private final FacultyCRUDMenu facultyMenu;
     private final DepartmentCRUDMenu departmentMenu;
@@ -32,8 +41,13 @@ public class MainMenu {
 
         InMemoryStudentRepository repo = new InMemoryStudentRepository();
         StudentService studentService = new StudentService(repo);
-        FacultyService facultyService = new FacultyService();
-        DepartmentService departmentService = new DepartmentService();
+
+        IRepository<Faculty, String> faculRepo = new InMemoryFacultyRepository();
+        this.facultyService = new FacultyService(faculRepo);
+
+        IRepository<Department, String> depRepo = new InMemoryDepartmentRepository();
+        this.departmentService = new DepartmentService(depRepo);
+
         this.studentMenu = new StudentCRUDMenu(studentService, departmentService, logger, scanner);
         this.facultyMenu = new FacultyCRUDMenu(facultyService, logger, scanner);
         this.departmentMenu = new DepartmentCRUDMenu(departmentService, facultyService, logger, scanner);
