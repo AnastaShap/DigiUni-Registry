@@ -37,7 +37,7 @@ public class StudentCRUDMenu {
         view.printMessage("=== Create New Student ===");
 
         view.printMessage("Enter System ID (e.g., 101):");
-        String id = ConsoleInputValidator.readNonEmptyString(scanner);
+        String id = ConsoleInputValidator.readNumericId(scanner);
 
         view.printMessage("Last Name:");
         String lastName = ConsoleInputValidator.readNonEmptyString(scanner);
@@ -51,9 +51,9 @@ public class StudentCRUDMenu {
         var bDate = inputHandler.readDate();
 
         view.printMessage("Email:");
-        String email = scanner.nextLine();
+        String email = ConsoleInputValidator.readEmail(scanner);
         view.printMessage("Phone:");
-        String phone = scanner.nextLine();
+        String phone = ConsoleInputValidator.readPhone(scanner);
 
         view.printMessage("Course Name:");
         int course = ConsoleInputValidator.readCourse(scanner);
@@ -120,7 +120,7 @@ public class StudentCRUDMenu {
 
         Student s = opt.get();
         view.printDetails(s);
-        view.printMessage("1-Name, 2-Course, 3-Group, 4-Status, 0-Exit");
+        view.printMessage("1-Name, 2-Course, 3-Group, 4-Status, 0-Exit"); // TO-DO: phone and email...
 
         int choice = ConsoleInputValidator.readMenuOption(scanner, 0, 4);
         switch (choice) {
