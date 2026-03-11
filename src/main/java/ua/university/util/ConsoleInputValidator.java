@@ -44,6 +44,45 @@ public class ConsoleInputValidator {
         }
     }
 
+    public static String readNumericId(Scanner scanner) {
+        while (true) {
+            String input = scanner.nextLine().trim();
+            // Перевірка: чи рядок складається тільки з цифр і не є порожнім
+            if (input.matches("\\d+")) {
+                return input;
+            }
+            System.out.println("Error: ID must contain only numbers. Please try again.");
+        }
+    }
+
+    public static String readEmail(Scanner sc) {
+        while (true) {
+            System.out.print("Enter email: ");
+            String input = sc.nextLine().trim();
+            if (input.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$")) {
+                return input;
+            }
+            System.out.println("Error: Invalid email format.");
+        }
+    }
+
+    /**
+     * Зчитує номер телефону у форматі +380... або 0...
+     * @param sc Scanner для читання вводу
+     * @return валідований номер телефону
+     */
+    public static String readPhone(Scanner sc) {
+        while (true) {
+            System.out.print("Enter phone (e.g., +380971234567): ");
+            String input = sc.nextLine().trim();
+            if (input.matches("^(\\+38)?0\\d{9}$")) {
+                return input;
+            } else {
+                System.out.println("Error: Invalid phone format. Use +380XXXXXXXXX or 0XXXXXXXXX.");
+            }
+        }
+    }
+
     // Курс 1–6
     /**
      * Зчитує номер курсу студента.
@@ -109,6 +148,7 @@ public class ConsoleInputValidator {
             }
         }
     }
+
 
 
 }
