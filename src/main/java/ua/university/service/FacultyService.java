@@ -57,22 +57,23 @@ public class FacultyService {
     }
 
     public void changeName(String facultyCode, String newName) {
-        Faculty faculty = getFacultyOrThrow(facultyCode);
+        Faculty faculty = getOrThrow(facultyCode);
         faculty.setName(newName);
     }
 
     public void changeShortName(String facultyCode, String newShortName) {
-        Faculty faculty = getFacultyOrThrow(facultyCode);
+        Faculty faculty = getOrThrow(facultyCode);
         faculty.setShortName(newShortName);
     }
 
     public void changeContacts(String facultyCode, String newContacts) {
-        Faculty faculty = getFacultyOrThrow(facultyCode);
+        Faculty faculty = getOrThrow(facultyCode);
         faculty.setContacts(newContacts);
     }
 
+    /*
     private Faculty getFacultyOrThrow(String code) {
         return findByCode(code)
                 .orElseThrow(() -> new FacultyNotFoundException(code));
-    }
+    }*/
 }
