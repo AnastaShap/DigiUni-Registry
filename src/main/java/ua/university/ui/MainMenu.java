@@ -3,6 +3,7 @@ package ua.university.ui;
 import ua.university.domain.Department;
 import ua.university.domain.Faculty;
 import ua.university.domain.Student;
+import ua.university.domain.Teacher;
 import ua.university.domain.enums.Role;
 import ua.university.domain.enums.StudentStatus;
 import ua.university.domain.enums.StudyForm;
@@ -52,16 +53,18 @@ public class MainMenu {
         IRepository<Department, String> depRepo = new InMemoryDepartmentRepository();
         this.departmentService = new DepartmentService(depRepo);
 
-        this.studentMenu = new StudentCRUDMenu(studentService, departmentService, logger, scanner);
+        this.studentMenu = new StudentCRUDMenu(studentService, departmentService, facultyService, logger, scanner);
         this.facultyMenu = new FacultyCRUDMenu(facultyService, logger, scanner);
         this.departmentMenu = new DepartmentCRUDMenu(departmentService, facultyService, logger, scanner);
+
+        seedData();
     }
 
     public void run() {
         login();
         while (true) {
             printMenu();
-            int option = ConsoleInputValidator.readMenuOption(scanner, 0, 13);
+            int option = ConsoleInputValidator.readMenuOption(scanner, 0, 14);
             try {
                 switch (option) {
                     case 1 -> studentMenu.createStudent();
@@ -77,6 +80,7 @@ public class MainMenu {
                     case 11 -> departmentMenu.showDepartments();
                     case 12 -> { requireManager(); departmentMenu.updateDepartment(); }
                     case 13 -> { requireManager(); departmentMenu.deleteDepartment(); }
+                    case 14 -> login();
                     case 0 -> { return; }
                 }
             } catch (AccessDeniedException e) {
@@ -113,40 +117,92 @@ public class MainMenu {
         System.out.println("11- List Departments");
         System.out.println("12- Update Department (manager)");
         System.out.println("13- Delete Department (manager)");
+        System.out.println("14- Change Current Role");
         System.out.println("0- Exit");
     }
 
-    // TEST DATA
+    // ===TEST DATA===
 
     private void seedData() {
-        // Факультети
+        // ВСІ Факультети НаУКМА
+       // seedFaculties();
         Faculty fit = new Faculty("FIT", "Faculty of IT", "FIT", null, "fit@ukma.edu.ua");
         facultyService.create(fit);
 
-        Faculty fgsn = new Faculty("FGSN", "Faculty of Humanities", "FGSN", null, "fgsn@ukma.edu.ua");
-        facultyService.create(fgsn);
+        Faculty fgn = new Faculty("FGN", "Faculty of Humanities", "FGN", null, "fgn@ukma.edu.ua");
+        facultyService.create(fgn);
 
-        Faculty fe = new Faculty("FE", "FACULTY OF ECONOMICS", "FGSN", null, "fgsn@ukma.edu.ua");
-        facultyService.create(fe);
+        Faculty fen = new Faculty("FEN", "Faculty of Economics", "FEN", null, "fen@ukma.edu.ua");
+        facultyService.create(fen);
 
-        // Кафедри
-        Department informatics = new Department("INF", "Informatics", fit, null, "Building 1");
+        //  Факультет правничих наук (ФПрН)
+        Faculty fpn = new Faculty("FPN", "Faculty of Law", "FPN", null, "fpn@ukma.edu.ua");
+        facultyService.create(fpn);
+
+        //  Факультет природничих наук (ФПН)
+        Faculty fpsn = new Faculty("FPSN", "Faculty of Natural Sciences", "FPSN", null, "fpsn@ukma.edu.ua");
+        facultyService.create(fpsn);
+
+        //  Факультет соціальних наук і соціальних технологій (ФСНСТ)
+        Faculty fsnst = new Faculty("FSNST", "Faculty of Social Sciences", "FSNST", null, "fsnst@ukma.edu.ua");
+        facultyService.create(fsnst);
+
+        //  Факультет охорони здоров’я, соціальної роботи та психології (ФОЗ)
+        Faculty foz = new Faculty("FOZ", "Faculty of Health Sciences", "FOZ", null, "foz@ukma.edu.ua");
+        facultyService.create(foz);
+
+         // ДЕКАНАТ ФІ
+        Teacher deanFit = new Teacher("DFIT", "Глибовець", "Андрій", "Миколайович",
+                LocalDate.of(1978, 1, 1), "a.glybovets@ukma.edu.ua", "+380444636985",
+                "Professor", "Dr. Sc.", "Academician", LocalDate.of(1990, 9, 1), 1.0);
+        facultyService.assignDean("FIT", deanFit);
+
+        // DEPARTMENTS
+        // --- Кафедри ФІТ (Факультет інформаційних технологій) ---
+        Department informatics = new Department("INF", "Кафедра інформатики", fit, deanFit, "1-й корпус");
         departmentService.create(informatics);
         facultyService.addDepartment("FIT", informatics);
 
-        Department depMath = new Department("MATH", "Math department", fit, null, "Building 1");
-        departmentService.create(depMath);
-        facultyService.addDepartment("FIT", depMath);
+        Department maths = new Department("MATH", "Кафедра математики", fit, null, "1-й корпус");
+        departmentService.create(maths);
+        facultyService.addDepartment("FIT", maths);
 
-        Department finance = new Department("FIN", "Finance", fit, null, "Building 1");
+        Department networkTech = new Department("NT", "Кафедра мережевих технологій", fit, null, "1-й корпус");
+        departmentService.create(networkTech);
+        facultyService.addDepartment("FIT", networkTech);
+
+// --- Кафедри ФЕН (Факультет економічних наук) ---
+        Department finance = new Department("FIN", "Кафедра фінансів", fen, null, "6-й корпус");
         departmentService.create(finance);
-        facultyService.addDepartment("FE", finance);
+        facultyService.addDepartment("FEN", finance);
 
-        // Студентів
+        Department marketing = new Department("MKT", "Кафедра маркетингу", fen, null, "6-й корпус");
+        departmentService.create(marketing);
+        facultyService.addDepartment("FEN", marketing);
+
+        Department economics = new Department("ECON", "Кафедра економічної теорії", fen, null, "6-й корпус");
+        departmentService.create(economics);
+        facultyService.addDepartment("FEN", economics);
+
+// --- Кафедри ФГН (Факультет гуманітарних наук) ---
+        Department history = new Department("HIST", "Кафедра історії", fgn, null, "4-й корпус");
+        departmentService.create(history);
+        facultyService.addDepartment("FGN", history);
+
+        Department philology = new Department("PHIL", "Кафедра філології", fgn, null, "4-й корпус");
+        departmentService.create(philology);
+        facultyService.addDepartment("FGN", philology);
+
+// --- Кафедри ФПрН (Факультет правничих наук) ---
+        Department law = new Department("LAW", "Кафедра правознавства", fpn, null, "4-й корпус");
+        departmentService.create(law);
+        facultyService.addDepartment("FPN", law);
+
+        // -- Студенти ФІ --
         Student student1 = new Student(
-                "1", "Шевченко", "Іван", "Петрович",
+                "100001", "Шевченко", "Іван", "Петрович",
                 LocalDate.of(2003, 5, 10),
-                "ivan@ukma.edu.ua", "0500000001",
+                "ivanshevch@ukma.edu.ua", "0999134159",
                 "S001", 2, "ІПЗ-2",
                 2022, StudyForm.BUDGET, StudentStatus.STUDYING
         );
@@ -154,9 +210,9 @@ public class MainMenu {
         student1.setDepartment(informatics);
 
         Student student4 = new Student(
-                "1", "Ткач", "Марк", "Олександрович",
+                "1000004", "Ткач", "Олексій", "Олександрович",
                 LocalDate.of(2003, 4, 17),
-                "ivan@ukma.edu.ua", "0500000002",
+                "tkacholex@ukma.edu.ua", "0637099723",
                 "S004", 2, "ІПЗ-2",
                 2022, StudyForm.BUDGET, StudentStatus.STUDYING
         );
@@ -164,9 +220,9 @@ public class MainMenu {
         student1.setDepartment(informatics);
 
         Student student2 = new Student(
-                "2", "Коваленко", "Анна", "Олегівна",
+                "100002", "Коваленко", "Анна", "Олегівна",
                 LocalDate.of(2004, 3, 20),
-                "anna@ukma.edu.ua", "0500000002",
+                "anna@ukma.edu.ua", "0999120869",
                 "S002", 1, "AВІС-1",
                 2023, StudyForm.CONTRACT, StudentStatus.STUDYING
         );
@@ -174,13 +230,40 @@ public class MainMenu {
         student1.setDepartment(informatics);
 
         Student student3 = new Student(
-                "3", "Бондар", "Максим", "Ігорович",
+                "140004", "Бондар", "Максим", "Ігорович",
                 LocalDate.of(2002, 11, 2),
-                "max@ukma.edu.ua", "0500000003",
+                "max@ukma.edu.ua", "0637099418",
                 "S003", 2, "КН-2",
                 2021, StudyForm.BUDGET, StudentStatus.STUDYING
         );
         studentService.create(student3);
         student1.setDepartment(informatics);
     }
+
+   /* private void seedFaculties(){
+        Faculty fit = new Faculty("FIT", "Faculty of IT", "FIT", null, "fit@ukma.edu.ua");
+        facultyService.create(fit);
+
+        Faculty fgn = new Faculty("FGN", "Faculty of Humanities", "FGN", null, "fgn@ukma.edu.ua");
+        facultyService.create(fgn);
+
+        Faculty fen = new Faculty("FEN", "Faculty of Economics", "FEN", null, "fen@ukma.edu.ua");
+        facultyService.create(fen);
+
+        //  Факультет правничих наук (ФПрН)
+        Faculty fpn = new Faculty("FPN", "Faculty of Law", "FPN", null, "fpn@ukma.edu.ua");
+        facultyService.create(fpn);
+
+        //  Факультет природничих наук (ФПН)
+        Faculty fpsn = new Faculty("FPSN", "Faculty of Natural Sciences", "FPSN", null, "fpsn@ukma.edu.ua");
+        facultyService.create(fpsn);
+
+        //  Факультет соціальних наук і соціальних технологій (ФСНСТ)
+        Faculty fsnst = new Faculty("FSNST", "Faculty of Social Sciences", "FSNST", null, "fsnst@ukma.edu.ua");
+        facultyService.create(fsnst);
+
+        //  Факультет охорони здоров’я, соціальної роботи та психології (ФОЗ)
+        Faculty foz = new Faculty("FOZ", "Faculty of Health Sciences", "FOZ", null, "foz@ukma.edu.ua");
+        facultyService.create(foz);
+    }*/
 }
