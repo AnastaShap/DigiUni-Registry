@@ -5,6 +5,9 @@ import ua.university.domain.Student;
 import ua.university.exception.DuplicateEntityException;
 import ua.university.exception.StudentNotFoundException;
 import ua.university.repository.student.IStudentRepository;
+
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -81,12 +84,13 @@ public class StudentService {
     /**
      * Пошук студентів за курсом.
      * @param course номер курсу
-     * @return список студентів вказаного курсу
      */
     public List<Student> findByCourse(int course) {
-        return repository.findAll().stream()
+       /* return repository.findAll().stream()
                 .filter(s -> s.getCourse() == course)
-                .toList();
+                .toList();*/
+
+       return findBy(s -> s.getCourse() == course);  // LAMBDA USAGE
     }
 
     /**
@@ -100,14 +104,15 @@ public class StudentService {
                 .toList();
     }
 
-   /* /**
-     * Finds all students belonging to a specific department.
+
+     //Finds all students belonging to a specific department.
+
 
     public List<Student> findByDepartment(String departmentId) {
         return repository.findAll().stream()
-                .filter(s -> s.getDepartmentId().equals(departmentId))
+                .filter(s -> s.getDepartment().equals(departmentId))
                 .toList();
-    }*/
+    }
 
     // ===== REPORTS =====
 
@@ -178,6 +183,13 @@ public class StudentService {
 
         student.setDepartment(newDepartment); // Business logic for transfer
         repository.save(student);
+    }
+
+    public int calculateAge(Student student) {
+        if (student.getBirthDate() == null) {
+            return 0;
+        }
+        return Period.between(student.getBirthDate(), LocalDate.now()).getYears();
     }
 
 }
