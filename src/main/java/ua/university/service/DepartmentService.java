@@ -32,7 +32,7 @@ public class DepartmentService {
 
     public void update(Department department) {
         Objects.requireNonNull(department);
-        repository.save(department); // Тепер через репозиторій
+        repository.save(department);
     }
 
     public void delete(String code) {
@@ -58,22 +58,22 @@ public class DepartmentService {
     }
 
     public void changeName(String departmentCode, String newName) {
-        Department dep = getDepartmentOrThrow(departmentCode);
+        Department dep = getOrThrow(departmentCode);
         dep.setName(newName);
     }
 
     public void changeLocation(String departmentCode, String newLocation) {
-        Department dep = getDepartmentOrThrow(departmentCode);
+        Department dep = getOrThrow(departmentCode);
         dep.setLocation(newLocation);
     }
 
     public void changeFaculty(String departmentCode, Faculty faculty) {
-        Department dep = getDepartmentOrThrow(departmentCode);
+        Department dep = getOrThrow(departmentCode);
         dep.setFaculty(faculty);
     }
 
-    private Department getDepartmentOrThrow(String code) {
-        return findByCode(code)
-                .orElseThrow(() -> new DepartmentNotFoundException(code));
-    }
+//    private Department getDepartmentOrThrow(String code) {
+//        return findByCode(code)
+//                .orElseThrow(() -> new DepartmentNotFoundException(code));
+//    }
 }
