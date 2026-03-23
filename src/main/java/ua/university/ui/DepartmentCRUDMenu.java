@@ -6,6 +6,7 @@ import ua.university.service.DepartmentService;
 import ua.university.service.FacultyService;
 import ua.university.util.ConsoleInputValidator;
 import ua.university.util.ILogger;
+import ua.university.util.StudentConsoleView;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +17,7 @@ public class DepartmentCRUDMenu {
     private final FacultyService facultyService;
     private final ILogger logger;
     private final Scanner scanner;
+    private final StudentConsoleView view = new StudentConsoleView();
 
     public DepartmentCRUDMenu(DepartmentService departmentService, FacultyService facultyService, ILogger logger, Scanner scanner) {
         this.departmentService = departmentService;
@@ -64,10 +66,16 @@ public class DepartmentCRUDMenu {
         }
 
         logger.info("=== Departments ===");
-        departments.forEach(d -> logger.info(d.toString()));
+        departments.forEach(d -> {
+            String output = String.format("ID: %-5s | Dept: %-20s | Location: %s",
+                    d.getCode(), d.getName(), d.getLocation());
+            logger.info(output);
+        });
+        //departments.forEach(d -> logger.info(d.toString()));   // CH-2 !!! usage of lambda
     }
 
     public void deleteDepartment() {
+        showDepartments();
         logger.info("Enter Department Code to delete:");
         String code = ConsoleInputValidator.readNonEmptyString(scanner);
 
