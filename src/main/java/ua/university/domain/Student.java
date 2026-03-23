@@ -9,6 +9,7 @@ import java.util.Objects;
 public class Student extends Person {
     private final String studentId;
     private Department department;
+    private Faculty faculty;
     private int course;       // 1-6
     private String group;     // назва групи, String
     private int entryYear;
@@ -17,10 +18,11 @@ public class Student extends Person {
 
     public Student(String id, String lastName, String firstName, String middleName,
                    LocalDate birthDate, String email, String phone,
-                   String studentId,Department department, int course, String group,
+                   String studentId, Faculty faculty, Department department, int course, String group,
                    int entryYear, StudyForm studyForm, StudentStatus status) {
         super(id, lastName, firstName, middleName, birthDate, email, phone);
         this.studentId = studentId;
+        this.faculty = faculty;
         this.department = department; // Link to department
         this.course = course;
         this.group = group;
@@ -34,7 +36,7 @@ public class Student extends Person {
                    String studentId, int course, String group,
                    int entryYear, StudyForm studyForm, StudentStatus status) {
         this(id, lastName, firstName, middleName, birthDate, email, phone,
-                studentId, null, course, group, entryYear, studyForm, status);
+                studentId, null, null, course, group, entryYear, studyForm, status);
     }
 
     public String getStudentId() {
@@ -56,6 +58,14 @@ public class Student extends Person {
     public void setCourse(int course) {
         if (course < 1 || course > 6) throw new IllegalArgumentException("Course must be 1-6");
         this.course = course;
+    }
+
+    public Faculty getFaculty() {
+        return faculty;
+    }
+
+    public void setFaculty (Faculty faculty) {
+        this.faculty = faculty;
     }
 
     public String getGroup() {
@@ -113,6 +123,7 @@ public class Student extends Person {
                 "studentId='" + studentId + '\'' +
                 ", fullName='" + getFullName() + '\'' +
                 ", course=" + course +
+                ", faculty=" + faculty +
                 ", group='" + group + '\'' +
                 ", entryYear=" + entryYear +
                 ", studyForm=" + studyForm +
