@@ -1,10 +1,12 @@
 package ua.university.ui.student;
 
 import ua.university.domain.Department;
+import ua.university.domain.Faculty;
 import ua.university.domain.Student;
 import ua.university.domain.enums.StudentStatus;
 import ua.university.domain.enums.StudyForm;
 import ua.university.service.DepartmentService;
+import ua.university.service.FacultyService;
 import ua.university.service.StudentService;
 import ua.university.util.ConsoleInputValidator;
 import ua.university.util.ILogger;
@@ -17,18 +19,28 @@ import java.util.Scanner;
 public class StudentCRUDMenu {
     private final StudentService studentService;
     private final DepartmentService departmentService;
+    private final FacultyService facultyService;
     private final ILogger logger;
     private final Scanner scanner;
-    private final StudentConsoleView view = new StudentConsoleView();
+    private final StudentConsoleView view;
 
     private final StudentInputHandler inputHandler;
     private final StudentSearchAndReportManager searchManager;
 
-    public StudentCRUDMenu(StudentService studentService, DepartmentService departmentService, ILogger logger, Scanner scanner) {
+    public StudentCRUDMenu(StudentService studentService,
+                           DepartmentService departmentService,
+                           FacultyService facultyService,
+                           ILogger logger,
+                           Scanner scanner) {
         this.studentService = studentService;
         this.departmentService = departmentService;
+        this.facultyService = facultyService;
+        this.view = new StudentConsoleView(studentService::calculateAge);
+
         this.logger = logger;
         this.scanner = scanner;
+
+
         this.inputHandler = new StudentInputHandler(scanner, view);
         this.searchManager = new StudentSearchAndReportManager(studentService, view, scanner);
     }
@@ -64,10 +76,10 @@ public class StudentCRUDMenu {
         view.printMessage("Enter Student ID: ");
         String sId = ConsoleInputValidator.readNonEmptyString(scanner);
 
-        int entryYear = inputHandler.readInt("Entry Study Year (e.g., 2024): ");
-
-        var form = inputHandler.readStudyForm();
-        var status = inputHandler.readStudentStatus();
+        view.printMessage("Enter Student Faculty: ");
+        String faculCode = ConsoleInputValidator.readNonEmptyString(scanner);
+        Optional<Faculty> faculOpt = facultyService.findByCode(faculCode);
+        Faculty faculty = faculOpt.get();
 
         /// TO-DO: Transfer Department logic
         view.printMessage("Enter Department Code (e.g., CS-01):");
@@ -81,12 +93,16 @@ public class StudentCRUDMenu {
             return; // Зупиняємо створення, якщо кафедри не існує
         }
 
+
+        int entryYear = inputHandler.readInt("Entry Study Year (e.g., 2024): ");
+        var form = inputHandler.readStudyForm();
+        var status = inputHandler.readStudentStatus();
+
         Department department = deptOptional.get();
 
-        // Створюємо студента, передаючи об'єкт кафедри
         Student student = new Student(
                 id, lastName, firstName, middleName,
-                bDate, email, phone, sId,
+                bDate, email, phone, sId, faculty,
                 department,
                 course, group, entryYear, form, status
         );

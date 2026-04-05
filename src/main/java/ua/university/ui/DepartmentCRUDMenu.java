@@ -17,7 +17,7 @@ public class DepartmentCRUDMenu {
     private final FacultyService facultyService;
     private final ILogger logger;
     private final Scanner scanner;
-    private final StudentConsoleView view = new StudentConsoleView();
+    //private final StudentConsoleView view = new StudentConsoleView();
 
     public DepartmentCRUDMenu(DepartmentService departmentService, FacultyService facultyService, ILogger logger, Scanner scanner) {
         this.departmentService = departmentService;

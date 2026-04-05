@@ -10,8 +10,10 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * Сервісний клас для роботи зі студентами.
@@ -106,11 +108,15 @@ public class StudentService {
 
 
      //Finds all students belonging to a specific department.
-
-
     public List<Student> findByDepartment(String departmentId) {
         return repository.findAll().stream()
                 .filter(s -> s.getDepartment().equals(departmentId))
+                .toList();
+    }
+
+    public List<Student> findAdults() {
+        return repository.findAll().stream()
+                .filter(s->calculateAge(s) >= 18)
                 .toList();
     }
 
@@ -146,7 +152,32 @@ public class StudentService {
         return repository.findAll();
     }
 
-    // EDIT
+    public Map<Integer, Long> countStudentsByCourse() {
+        return repository.findAll().stream()
+                .collect(Collectors.groupingBy(
+                        Student::getCourse,
+                        Collectors.counting()
+                ));
+    }
+
+    public Map<String, Double> averageAgeByGroup() {
+        return repository.findAll().stream()
+                .collect(Collectors.groupingBy(
+                        Student::getGroup,
+                        Collectors.averagingInt(s -> Period.between(
+                                s.getBirthDate(), LocalDate.now()
+                        ).getYears())
+                ));
+    }
+
+    public Optional<Integer> getMostPopularCourse() {
+        return countStudentsByCourse().entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey);
+    }
+
+
+    // EDIT STUDENT DATA
     public void changeCourse(String id, int newCourse) {
 
         Student student = repository.findById(id)
@@ -177,6 +208,8 @@ public class StudentService {
 
         repository.save(student);
     }
+
+    // --- Other possible actions ---
     public void transferToDepartment(String studentId, Department newDepartment) {
         Student student = repository.findById(studentId)
                 .orElseThrow(() -> new StudentNotFoundException(studentId));

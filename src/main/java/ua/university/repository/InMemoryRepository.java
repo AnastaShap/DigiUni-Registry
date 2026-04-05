@@ -19,7 +19,7 @@ public abstract class InMemoryRepository<T, ID> implements IRepository<T, ID> {
     @Override
     public void save(T entity) {
         // Тут можна додати логіку отримання ID через рефлексію або інтерфейс HasId
-        // Для спрощення в конкретних репозиторіях переокреслимо цей метод
+
     }
 
     @Override

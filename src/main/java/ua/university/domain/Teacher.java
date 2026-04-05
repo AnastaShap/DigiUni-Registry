@@ -4,9 +4,9 @@ import java.util.Objects;
 
 public class Teacher extends Person {
     private String position;
-    private String degree;
-    private String academicTitle;
-    private LocalDate hireDate;
+    private final String degree;
+    private final String academicTitle;
+    private final LocalDate hireDate;
     private double workload;
 
     public Teacher(String id, String lastName, String firstName, String middleName,
@@ -43,6 +43,9 @@ public class Teacher extends Person {
                 ", title=" + academicTitle +
                 ", hireDate=" + hireDate +
                 ", workload=" + workload;
+    }
+    public Faculty getFaculty() {
+        return faculty;
     }
 }
 

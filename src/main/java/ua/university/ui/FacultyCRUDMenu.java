@@ -3,6 +3,7 @@ package ua.university.ui;
 import ua.university.domain.Faculty;
 import ua.university.domain.Teacher;
 import ua.university.service.FacultyService;
+import ua.university.service.StudentService;
 import ua.university.util.ConsoleInputValidator;
 import ua.university.util.ILogger;
 import ua.university.util.StudentConsoleView;
@@ -16,12 +17,19 @@ public class FacultyCRUDMenu {
     private final FacultyService facultyService;
     private final ILogger logger;
     private final Scanner scanner;
-    private final StudentConsoleView view = new StudentConsoleView();
+    private final StudentConsoleView view;
 
-    public FacultyCRUDMenu(FacultyService facultyService, ILogger logger, Scanner scanner) {
+    public FacultyCRUDMenu(FacultyService facultyService,
+                           StudentService studentService,
+                           ILogger logger,
+                           Scanner scanner) {
+
         this.facultyService = facultyService;
         this.logger = logger;
         this.scanner = scanner;
+
+        // 🔥 ось ключова магія
+        this.view = new StudentConsoleView(studentService::calculateAge);
     }
 
     public void createFaculty() {

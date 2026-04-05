@@ -4,12 +4,14 @@ import ua.university.domain.enums.StudentStatus;
 import ua.university.domain.enums.StudyForm;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.Objects;
 
 public class Student extends Person {
     private final String studentId;
     private Department department;
     private Faculty faculty;
+    private int birthDate;
     private int course;       // 1-6
     private String group;     // назва групи, String
     private int entryYear;
@@ -38,6 +40,13 @@ public class Student extends Person {
         this(id, lastName, firstName, middleName, birthDate, email, phone,
                 studentId, null, null, course, group, entryYear, studyForm, status);
     }
+
+    // Gets student's age
+    /*public int getAge() {
+        if (birthDate == null) return 0;
+        return Period.between(birthDate, LocalDate.now()).getYears();
+    }*/
+
 
     public String getStudentId() {
         return studentId;

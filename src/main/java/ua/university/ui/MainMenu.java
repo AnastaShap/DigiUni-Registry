@@ -54,7 +54,7 @@ public class MainMenu {
         this.departmentService = new DepartmentService(depRepo);
 
         this.studentMenu = new StudentCRUDMenu(studentService, departmentService, facultyService, logger, scanner);
-        this.facultyMenu = new FacultyCRUDMenu(facultyService, logger, scanner);
+        this.facultyMenu = new FacultyCRUDMenu(facultyService, studentService, logger, scanner);
         this.departmentMenu = new DepartmentCRUDMenu(departmentService, facultyService, logger, scanner);
 
         seedData();
