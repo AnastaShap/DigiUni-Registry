@@ -1,39 +1,37 @@
 package ua.university.service;
 
-import ua.university.domain.Department;
 import ua.university.domain.Teacher;
-import ua.university.exception.DepartmentNotFoundException;
+import ua.university.exception.TeacherNotFoundException; // Changed to TeacherNotFound
 import ua.university.repository.IRepository;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class TeacherService {
-    private final IRepository<Teacher, String> teachers;
+    private final IRepository<Teacher, String> teacherRepository;
 
     public TeacherService(IRepository<Teacher, String> repository) {
-        this.teachers = repository;
+        this.teacherRepository = repository;
     }
 
-   // private final List<Teacher> teachers = new ArrayList<>();
-
     public void addTeacher(Teacher teacher) {
-        teachers.add(teacher);
+        teacherRepository.save(teacher); // Assuming your IRepository uses 'save' or 'add'
     }
 
     public List<Teacher> getAll() {
-        return List.copyOf(teachers);
+        // Use the repository's method to get all records
+        return teacherRepository.findAll();
     }
 
     public Optional<Teacher> findById(String id) {
-        return teachers.stream()
-                .filter(t -> t.getId().equals(id))
-                .findFirst();
+        return teacherRepository.findById(id);
     }
 
-    private Department getOrThrow(String code) {
-        return teachers.findById(code)
-                .orElseThrow(() -> new DepartmentNotFoundException(code));
+    /**
+     * Helper method to get a teacher or throw an exception if not found.
+     */
+    private Teacher getOrThrow(String id) {
+        return teacherRepository.findById(id)
+                .orElseThrow(() -> new TeacherNotFoundException(id));
     }
-
 }
