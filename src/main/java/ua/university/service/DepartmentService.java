@@ -6,72 +6,74 @@ import ua.university.domain.Student;
 import ua.university.domain.Teacher;
 import ua.university.exception.DepartmentNotFoundException;
 import ua.university.exception.DuplicateEntityException;
+import ua.university.repository.IRepository;
 
 import java.util.*;
 
 public class DepartmentService {
 
-    private final Map<String, Department> departments = new HashMap<>();
+    private final IRepository<Department, String> repository;
+
+    public DepartmentService(IRepository<Department, String> repository) {
+        this.repository = repository;
+    }
+
+    private Department getOrThrow(String code) {
+        return repository.findById(code)
+                .orElseThrow(() -> new DepartmentNotFoundException(code));
+    }
 
     public void create(Department department) {
-        Objects.requireNonNull(department);
-        if (departments.containsKey(department.getCode())) {
-            throw new DuplicateEntityException("Department already exists: " + department.getCode());
+        if (repository.findById(department.getCode()).isPresent()) {
+            throw new DuplicateEntityException("Department exists: " + department.getCode());
         }
-        departments.put(department.getCode(), department);
-    }
-
-    public Optional<Department> findByCode(String code) {
-        return Optional.ofNullable(departments.get(code));
-    }
-
-    public List<Department> findAll() {
-        return new ArrayList<>(departments.values());
-    }
-
-    public void delete(String code) {
-        if (departments.remove(code) == null) {
-            throw new DepartmentNotFoundException(code);
-        }
+        repository.save(department);
     }
 
     public void update(Department department) {
         Objects.requireNonNull(department);
-        departments.put(department.getCode(), department);
+        repository.save(department);
     }
 
+    public void delete(String code) {
+        getOrThrow(code); // Перевірка на існування
+        repository.deleteById(code);
+    }
+
+    public Optional<Department> findByCode(String code) {
+        return repository.findById(code);
+    }
+
+    public List<Department> findAll() {
+        return repository.findAll();
+    }
+
+    // Методи бізнес-логіки
     public void addStudent(String departmentCode, Student student) {
-        Department dep = getDepartmentOrThrow(departmentCode);
-        dep.getStudents().add(student);
-    }
-
-    public void addTeacher(String departmentCode, Teacher teacher) {
-        Department dep = getDepartmentOrThrow(departmentCode);
-        dep.getTeachers().add(teacher);
+        getOrThrow(departmentCode).getStudents().add(student);
     }
 
     public void assignHead(String departmentCode, Teacher teacher) {
-        Department dep = getDepartmentOrThrow(departmentCode);
-        dep.setHead(teacher);
+        getOrThrow(departmentCode).setHead(teacher);
     }
 
     public void changeName(String departmentCode, String newName) {
-        Department dep = getDepartmentOrThrow(departmentCode);
+        Department dep = getOrThrow(departmentCode);
         dep.setName(newName);
     }
 
     public void changeLocation(String departmentCode, String newLocation) {
-        Department dep = getDepartmentOrThrow(departmentCode);
+        Department dep = getOrThrow(departmentCode);
         dep.setLocation(newLocation);
     }
 
     public void changeFaculty(String departmentCode, Faculty faculty) {
-        Department dep = getDepartmentOrThrow(departmentCode);
+        Department dep = getOrThrow(departmentCode);
         dep.setFaculty(faculty);
     }
 
-    private Department getDepartmentOrThrow(String code) {
-        return findByCode(code)
-                .orElseThrow(() -> new DepartmentNotFoundException(code));
-    }
+//    private Department getDepartmentOrThrow(String code) {
+//        return findByCode(code)
+//                .orElseThrow(() -> new DepartmentNotFoundException(code));
+//    }
 }

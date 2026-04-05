@@ -69,7 +69,8 @@ public class StudentSearchAndReportManager {
             }
             case 2 -> {
                 int course = ConsoleInputValidator.readCourse(scanner);
-                view.printList(studentService.findByCourse(course));
+                List<Student> st = studentService.findByCourse(course);
+                view.printList(st);
             }
             case 3 -> {
                 String group = ConsoleInputValidator.readGroup(scanner);
@@ -78,5 +79,9 @@ public class StudentSearchAndReportManager {
             // (4 - Filter by Department)
 
         }
+        // /Приклад використання  методу findBy з лямбдою:
+        //List<Student> seniors = studentService.findBy(s -> s.getCourse() >= 4);
     }
+
+
 }

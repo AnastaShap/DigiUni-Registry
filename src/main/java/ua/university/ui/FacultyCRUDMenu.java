@@ -1,10 +1,14 @@
 package ua.university.ui;
 
 import ua.university.domain.Faculty;
+import ua.university.domain.Teacher;
 import ua.university.service.FacultyService;
+import ua.university.service.StudentService;
 import ua.university.util.ConsoleInputValidator;
 import ua.university.util.ILogger;
+import ua.university.util.StudentConsoleView;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -13,11 +17,19 @@ public class FacultyCRUDMenu {
     private final FacultyService facultyService;
     private final ILogger logger;
     private final Scanner scanner;
+    private final StudentConsoleView view;
 
-    public FacultyCRUDMenu(FacultyService facultyService, ILogger logger, Scanner scanner) {
+    public FacultyCRUDMenu(FacultyService facultyService,
+                           StudentService studentService,
+                           ILogger logger,
+                           Scanner scanner) {
+
         this.facultyService = facultyService;
         this.logger = logger;
         this.scanner = scanner;
+
+        // 🔥 ось ключова магія
+        this.view = new StudentConsoleView(studentService::calculateAge);
     }
 
     public void createFaculty() {
@@ -29,13 +41,20 @@ public class FacultyCRUDMenu {
         logger.info("Enter Faculty Name:");
         String name = ConsoleInputValidator.readNonEmptyString(scanner);
 
-        logger.info("Enter Faculty Short Name:");
+        view.printMessage("Enter Faculty Short Name:");
         String shortName = ConsoleInputValidator.readNonEmptyString(scanner);
 
-        logger.info("Enter Faculty Contacts:");
-        String contacts = ConsoleInputValidator.readNonEmptyString(scanner);
+       /* view.printMessage("Enter Faculty Contacts:");
+        String contacts = ConsoleInputValidator.readNonEmptyString(scanner);*/
 
-        Faculty faculty = new Faculty(code, name, shortName, null, contacts);
+        view.printMessage("Enter Faculty Email:");
+        String contacts = ConsoleInputValidator.readEmail(scanner);  // ADD EMAIL CLASS (to avoid anti-pattern)
+
+        Teacher dean = readDeanData();
+
+        Faculty faculty = new Faculty(code, name, shortName, dean, contacts);
+        //Faculty faculty = new Faculty(code, name, shortName, null, contacts);
+       // facultyService.assignDean("");
 
         try {
             facultyService.create(faculty);
@@ -53,7 +72,17 @@ public class FacultyCRUDMenu {
         }
 
         logger.info("=== Faculties ===");
-        faculties.forEach(f -> logger.info(f.toString()));
+        //faculties.forEach(f -> logger.info(f.toString()));
+
+        // extended
+        faculties.forEach(f -> {
+            String output = String.format("Code: %-6s | Short: %-8s | Name: %-30s | Contacts: %s",
+                    f.getCode(),
+                    f.getShortName(),
+                    f.getName(),
+                    f.getContacts());
+            logger.info(output);
+        });
     }
 
     public void deleteFaculty() {
@@ -102,5 +131,47 @@ public class FacultyCRUDMenu {
             default -> {
             }
         }
+    }
+
+    // helper :  create dean(teacher instance)
+
+    private Teacher readDeanData() {
+        logger.info("--- Entering Dean's Data ---");
+
+        logger.info("Enter Teacher System ID:");
+        String id = ConsoleInputValidator.readNumericId(scanner);
+
+        logger.info("Last Name:");
+        String lastName = ConsoleInputValidator.readNonEmptyString(scanner);
+
+        logger.info("First Name:");
+        String firstName = ConsoleInputValidator.readNonEmptyString(scanner);
+
+        logger.info("Middle Name:");
+        String middleName = ConsoleInputValidator.readNonEmptyString(scanner);
+
+        logger.info("Email:");
+        String email = ConsoleInputValidator.readNonEmptyString(scanner); // Можна використати readEmail
+
+        logger.info("Phone:");
+        String phone = ConsoleInputValidator.readPhone(scanner);
+
+        logger.info("Position (e.g., Professor):");
+        String position = ConsoleInputValidator.readNonEmptyString(scanner);
+
+        logger.info("Degree (e.g., PhD):");
+        String degree = ConsoleInputValidator.readNonEmptyString(scanner);
+
+        logger.info("Academic Title:");
+        String title = ConsoleInputValidator.readNonEmptyString(scanner);
+
+        LocalDate birthDate = LocalDate.of(1980, 1, 1); // Тимчасово або через ввід
+        LocalDate hireDate = LocalDate.now();
+        double workload = 1.0;
+
+        return new Teacher(
+                id, lastName, firstName, middleName, birthDate,
+                email, phone, position, degree, title, hireDate, workload
+        );
     }
 }

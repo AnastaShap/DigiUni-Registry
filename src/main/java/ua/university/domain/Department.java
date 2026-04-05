@@ -41,9 +41,12 @@ public class Department {
         return teachers;
     }
 
+    // added  code to show
     @Override
     public String toString() {
-        return code + " - " + name + ", location: " + location;
+        String facultyInfo = (faculty != null) ? faculty.getShortName() : "No Faculty";
+        return String.format("Code: %-5s | Name: %-25s | Faculty: %-10s | Location: %s",
+                code, name, facultyInfo, location);
     }
 
     public String getCode() {
