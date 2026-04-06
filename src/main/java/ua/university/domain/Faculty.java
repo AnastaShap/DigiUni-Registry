@@ -1,8 +1,9 @@
 package ua.university.domain;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Faculty {
+public class Faculty implements Serializable {
     private String code;
     private String name;
     private String shortName;

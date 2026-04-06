@@ -7,8 +7,10 @@ import java.util.Optional;
 public interface IRepository<T, ID> {
 
     List<T> findAll();
+
     Optional<T> findById(ID id);
+
     void save(T entity);
+
     void deleteById(ID id);
-    boolean existsById(ID id); // Додано для зручності перевірок
 }

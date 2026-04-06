@@ -1,11 +1,10 @@
 package ua.university.repository;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 // Базова реалізація для всіх репозиторіїв !!!
 public abstract class InMemoryRepository<T, ID> implements IRepository<T, ID> {
-    protected final Map<ID, T> storage = new ConcurrentHashMap<>();
+    protected final Map<ID, T> storage = new HashMap<>();
 
     @Override
     public List<T> findAll() {
@@ -20,17 +19,11 @@ public abstract class InMemoryRepository<T, ID> implements IRepository<T, ID> {
     @Override
     public void save(T entity) {
         // Тут можна додати логіку отримання ID через рефлексію або інтерфейс HasId
-        // Метод save залишається абстрактним або реалізується в нащадках,
-        // бо кожен об'єкт (Student, Teacher, Dept) має свій спосіб отримання ID
+
     }
 
     @Override
     public void deleteById(ID id) {
         storage.remove(id);
-    }
-
-    @Override
-    public boolean existsById(ID id) {
-        return storage.containsKey(id);
     }
 }

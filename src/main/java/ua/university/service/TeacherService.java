@@ -28,15 +28,6 @@ public class TeacherService {
     }
 
     /**
-     * Видаляє викладача за ідентифікатором.
-     * Спочатку перевіряє, чи існує такий викладач.
-     */
-    public void delete(String id) {
-        // Використовуємо твій getOrThrow для валідації
-        getOrThrow(id);
-        teacherRepository.deleteById(id);
-    }
-    /**
      * Helper method to get a teacher or throw an exception if not found.
      */
     private Teacher getOrThrow(String id) {

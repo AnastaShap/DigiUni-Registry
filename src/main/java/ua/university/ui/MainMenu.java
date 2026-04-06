@@ -7,9 +7,9 @@ import ua.university.domain.Teacher;
 import ua.university.domain.enums.Role;
 import ua.university.domain.enums.StudentStatus;
 import ua.university.domain.enums.StudyForm;
-import ua.university.dto.Email;
-import ua.university.dto.PhoneNumber;
 import ua.university.exception.AccessDeniedException;
+import ua.university.io.DataStorageService;
+import ua.university.io.UniversityDataSnapshot;
 import ua.university.repository.IRepository;
 import ua.university.repository.InMemoryDepartmentRepository;
 import ua.university.repository.InMemoryFacultyRepository;
@@ -20,11 +20,11 @@ import ua.university.security.User;
 import ua.university.service.DepartmentService;
 import ua.university.service.FacultyService;
 import ua.university.service.StudentService;
-import ua.university.service.multithreading.AutoSaveService;
 import ua.university.ui.student.StudentCRUDMenu;
 import ua.university.util.ConsoleInputValidator;
 import ua.university.util.ILogger;
 
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.Scanner;
 import java.util.Set;
@@ -42,10 +42,12 @@ public class MainMenu {
     private final AccessManager accessManager;
     private User currentUser;
 
-    // для багатопоточості
-    private final AutoSaveService autoSaveService;
+    private final DataStorageService dataStorageService;
+    private final Path dataFile;
 
     public MainMenu(ILogger logger) {
+        this.dataStorageService = new DataStorageService();
+        this.dataFile = Path.of("data", "university-data.bin");
         this.scanner = new Scanner(System.in);
         this.authService = new AuthService();
         this.accessManager = new AccessManager();
@@ -63,11 +65,34 @@ public class MainMenu {
         this.facultyMenu = new FacultyCRUDMenu(facultyService, studentService, logger, scanner);
         this.departmentMenu = new DepartmentCRUDMenu(departmentService, facultyService, logger, scanner);
 
-        this.autoSaveService = new AutoSaveService(facultyService, studentService, logger);
+        loadOrSeedData();
+    }
+    private void loadOrSeedData() {
+        if (dataStorageService.exists(dataFile)) {
+            UniversityDataSnapshot snapshot = dataStorageService.load(dataFile);
+
+            if (snapshot != null) {
+                snapshot.faculties().forEach(facultyService::create);
+                snapshot.departments().forEach(departmentService::create);
+                snapshot.students().forEach(studentService::create);
+                System.out.println("\n" +
+                        "Data loaded from a file.");
+                return;
+            }
+        }
 
         seedData();
-        // Запускаємо автозбереження кожні 60 секунд
-        autoSaveService.startAutoSave(60);
+        saveData();
+    }
+    private void saveData() {
+        UniversityDataSnapshot snapshot = new UniversityDataSnapshot(
+                facultyService.findAll(),
+                departmentService.findAll(),
+                studentService.getAllStudents()
+        );
+
+        dataStorageService.save(dataFile, snapshot);
+        System.out.println("Data saved.");
     }
 
     public void run() {
@@ -91,7 +116,10 @@ public class MainMenu {
                     case 12 -> { requireManager(); departmentMenu.updateDepartment(); }
                     case 13 -> { requireManager(); departmentMenu.deleteDepartment(); }
                     case 14 -> login();
-                    case 0 -> { return; }
+                    case 0 -> {
+                        saveData();
+                        return;
+                     }
                 }
             } catch (AccessDeniedException e) {
                 System.out.println(e.getMessage());
@@ -163,7 +191,7 @@ public class MainMenu {
 
          // ДЕКАНАТ ФІ
         Teacher deanFit = new Teacher("DFIT", "Глибовець", "Андрій", "Миколайович",
-                LocalDate.of(1978, 1, 1), new Email("a.glybovets@ukma.edu.ua"), new PhoneNumber("+380444636985"),
+                LocalDate.of(1978, 1, 1), "a.glybovets@ukma.edu.ua", "+380444636985",
                 "Professor", "Dr. Sc.", "Academician", LocalDate.of(1990, 9, 1), 1.0);
         facultyService.assignDean("FIT", deanFit);
 
@@ -212,7 +240,7 @@ public class MainMenu {
         Student student1 = new Student(
                 "100001", "Шевченко", "Іван", "Петрович",
                 LocalDate.of(2003, 5, 10),
-                new Email("ivanshevch@ukma.edu.ua"), new PhoneNumber("0999134159"), // Ось так
+                "ivanshevch@ukma.edu.ua", "0999134159",
                 "S001", 2, "ІПЗ-2",
                 2022, StudyForm.BUDGET, StudentStatus.STUDYING
         );
@@ -221,7 +249,8 @@ public class MainMenu {
 
         Student student4 = new Student(
                 "1000004", "Ткач", "Олексій", "Олександрович",
-                LocalDate.of(2003, 4, 17), new Email("tkacholex@ukma.edu.ua"), new PhoneNumber("0637099723"),
+                LocalDate.of(2003, 4, 17),
+                "tkacholex@ukma.edu.ua", "0637099723",
                 "S004", 2, "ІПЗ-2",
                 2022, StudyForm.BUDGET, StudentStatus.STUDYING
         );
@@ -231,7 +260,7 @@ public class MainMenu {
         Student student2 = new Student(
                 "100002", "Коваленко", "Анна", "Олегівна",
                 LocalDate.of(2004, 3, 20),
-                new Email("anna@ukma.edu.ua"), new PhoneNumber("0999120869"),
+                "anna@ukma.edu.ua", "0999120869",
                 "S002", 1, "AВІС-1",
                 2023, StudyForm.CONTRACT, StudentStatus.STUDYING
         );
@@ -241,7 +270,7 @@ public class MainMenu {
         Student student3 = new Student(
                 "140004", "Бондар", "Максим", "Ігорович",
                 LocalDate.of(2002, 11, 2),
-                new Email("max@ukma.edu.ua"), new PhoneNumber("0667341919"),
+                "max@ukma.edu.ua", "0637099418",
                 "S003", 2, "КН-2",
                 2021, StudyForm.BUDGET, StudentStatus.STUDYING
         );

@@ -5,8 +5,6 @@ import ua.university.domain.Faculty;
 import ua.university.domain.Student;
 import ua.university.domain.enums.StudentStatus;
 import ua.university.domain.enums.StudyForm;
-import ua.university.dto.Email;
-import ua.university.dto.PhoneNumber;
 import ua.university.service.DepartmentService;
 import ua.university.service.FacultyService;
 import ua.university.service.StudentService;
@@ -65,10 +63,9 @@ public class StudentCRUDMenu {
         var bDate = inputHandler.readDate();
 
         view.printMessage("Email:");
-        Email email = new Email(ConsoleInputValidator.readEmail(scanner));
-
+        String email = ConsoleInputValidator.readEmail(scanner);
         view.printMessage("Phone:");
-        PhoneNumber phone = new PhoneNumber(ConsoleInputValidator.readPhone(scanner));
+        String phone = ConsoleInputValidator.readPhone(scanner);
 
         view.printMessage("Course Name:");
         int course = ConsoleInputValidator.readCourse(scanner);
@@ -157,24 +154,5 @@ public class StudentCRUDMenu {
             }
         }
         logger.info("Updated.");
-    }
-
-    // --- KT-3 SHOW STATISTICS TEST STREAM API
-
-    public void showStatistics() {
-        logger.info("=== Statistics ===");
-
-        var byCourse = studentService.countByCourse();
-        byCourse.forEach((course, count) ->
-                logger.info("Course " + course + ": " + count)
-        );
-
-        double avgAge = studentService.getAverageAge();
-        logger.info("Average age: " + avgAge);
-
-        studentService.getLargestGroup()
-                .ifPresent(e ->
-                        logger.info("Largest group: " + e.getKey() + " (" + e.getValue() + ")")
-                );
     }
 }

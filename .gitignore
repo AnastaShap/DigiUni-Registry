@@ -28,3 +28,5 @@ build/
 
 # Compiled files
 out/
+
+data/university-data.bin
