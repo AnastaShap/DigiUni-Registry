@@ -11,12 +11,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class AuthAccessTest {
 
     @Test
-    void adminLoginShouldReturnManagerRole() {
+    void adminLoginShouldReturnAdminRole() {
         AuthService authService = new AuthService();
-
-        User user = authService.login("admin");
-
-        assertEquals(Role.MANAGER, user.role());
+        User user = authService.login("admin", "admin123");
+        assertEquals(Role.ADMIN, user.getRole());
     }
 
     @Test
@@ -25,6 +23,6 @@ class AuthAccessTest {
         User user = new User("student", Role.USER);
 
         assertThrows(AccessDeniedException.class,
-                () -> accessManager.requireAnyRole(user, Set.of(Role.MANAGER)));
+                () -> accessManager.requireAnyRole(user, Set.of(Role.MANAGER, Role.ADMIN)));
     }
 }
