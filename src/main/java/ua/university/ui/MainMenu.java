@@ -97,29 +97,79 @@ public class MainMenu {
 
     public void run() {
         login();
+
         while (true) {
             printMenu();
-            int option = ConsoleInputValidator.readMenuOption(scanner, 0, 14);
+            int option = ConsoleInputValidator.readMenuOption(scanner, 0, 18);
+
             try {
                 switch (option) {
-                    case 1 -> studentMenu.createStudent();
+                    case 1 -> {
+                        requireManager();
+                        studentMenu.createStudent();
+                    }
                     case 2 -> studentMenu.showStudents();
-                    case 3 -> studentMenu.updateStudent();
-                    case 4 -> studentMenu.deleteStudent();
+                    case 3 -> {
+                        requireManager();
+                        studentMenu.updateStudent();
+                    }
+                    case 4 -> {
+                        requireManager();
+                        studentMenu.deleteStudent();
+                    }
                     case 5 -> studentMenu.searchMenu();
-                    case 6 -> { requireManager(); facultyMenu.createFaculty(); }
+
+                    case 6 -> {
+                        requireManager();
+                        facultyMenu.createFaculty();
+                    }
                     case 7 -> facultyMenu.showFaculties();
-                    case 8 -> { requireManager(); facultyMenu.updateFaculty(); }
-                    case 9 -> { requireManager(); facultyMenu.deleteFaculty(); }
-                    case 10 -> { requireManager(); departmentMenu.createDepartment(); }
+                    case 8 -> {
+                        requireManager();
+                        facultyMenu.updateFaculty();
+                    }
+                    case 9 -> {
+                        requireManager();
+                        facultyMenu.deleteFaculty();
+                    }
+
+                    case 10 -> {
+                        requireManager();
+                        departmentMenu.createDepartment();
+                    }
                     case 11 -> departmentMenu.showDepartments();
-                    case 12 -> { requireManager(); departmentMenu.updateDepartment(); }
-                    case 13 -> { requireManager(); departmentMenu.deleteDepartment(); }
+                    case 12 -> {
+                        requireManager();
+                        departmentMenu.updateDepartment();
+                    }
+                    case 13 -> {
+                        requireManager();
+                        departmentMenu.deleteDepartment();
+                    }
+
                     case 14 -> login();
+
+                    case 15 -> {
+                        requireAdmin();
+                        showUsers();
+                    }
+                    case 16 -> {
+                        requireAdmin();
+                        createUser();
+                    }
+                    case 17 -> {
+                        requireAdmin();
+                        changeUserRole();
+                    }
+                    case 18 -> {
+                        requireAdmin();
+                        blockOrUnblockUser();
+                    }
+
                     case 0 -> {
                         saveData();
                         return;
-                     }
+                    }
                 }
             } catch (AccessDeniedException e) {
                 System.out.println(e.getMessage());
@@ -130,33 +180,62 @@ public class MainMenu {
     }
 
     private void login() {
-        System.out.print("Login (admin -> MANAGER, any other login -> USER): ");
-        String login = scanner.nextLine().trim();
-        currentUser = authService.login(login);
-        System.out.println("Logged in as " + currentUser.login() + " with role " + currentUser.role());
+        while (true) {
+            try {
+                System.out.print("Login: ");
+                String login = scanner.nextLine().trim();
+
+                System.out.print("Password: ");
+                String password = scanner.nextLine().trim();
+
+                currentUser = authService.login(login, password);
+                System.out.println("Успішний вхід: " + currentUser.getLogin() +
+                        ", роль: " + currentUser.getRole());
+                return;
+
+            } catch (RuntimeException e) {
+                System.out.println("Помилка входу: " + e.getMessage());
+                System.out.println("Спробуйте ще раз.");
+            }
+        }
     }
 
     private void requireManager() {
-        accessManager.requireAnyRole(currentUser, Set.of(Role.MANAGER));
+        accessManager.requireAnyRole(currentUser, Set.of(Role.MANAGER, Role.ADMIN));
+    }
+
+    private void requireAdmin() {
+        accessManager.requireAnyRole(currentUser, Set.of(Role.ADMIN));
     }
 
     private void printMenu() {
-        System.out.println("Current role: " + (currentUser != null ? currentUser.role() : "UNKNOWN"));
-        System.out.println("1- Add Student");
-        System.out.println("2- List/Sort Students");
-        System.out.println("3- Update Student");
-        System.out.println("4- Delete Student");
-        System.out.println("5- Search/Filter Students");
-        System.out.println("6- Add Faculty (manager)");
-        System.out.println("7- List Faculties");
-        System.out.println("8- Update Faculty (manager)");
-        System.out.println("9- Delete Faculty (manager)");
-        System.out.println("10- Add Department (manager)");
-        System.out.println("11- List Departments");
-        System.out.println("12- Update Department (manager)");
-        System.out.println("13- Delete Department (manager)");
-        System.out.println("14- Change Current Role");
-        System.out.println("0- Exit");
+        System.out.println("\nCurrent user: " + (currentUser != null ? currentUser.getLogin() : "UNKNOWN"));
+        System.out.println("Current role: " + (currentUser != null ? currentUser.getRole() : "UNKNOWN"));
+
+        System.out.println("1 - Add Student (manager/admin)");
+        System.out.println("2 - List/Sort Students");
+        System.out.println("3 - Update Student (manager/admin)");
+        System.out.println("4 - Delete Student (manager/admin)");
+        System.out.println("5 - Search/Filter Students");
+
+        System.out.println("6 - Add Faculty (manager/admin)");
+        System.out.println("7 - List Faculties");
+        System.out.println("8 - Update Faculty (manager/admin)");
+        System.out.println("9 - Delete Faculty (manager/admin)");
+
+        System.out.println("10 - Add Department (manager/admin)");
+        System.out.println("11 - List Departments");
+        System.out.println("12 - Update Department (manager/admin)");
+        System.out.println("13 - Delete Department (manager/admin)");
+
+        System.out.println("14 - Login as another user");
+
+        System.out.println("15 - Show users (admin)");
+        System.out.println("16 - Create user (admin)");
+        System.out.println("17 - Change user role (admin)");
+        System.out.println("18 - Block/Unblock user (admin)");
+
+        System.out.println("0 - Exit");
     }
 
     // ===TEST DATA===
@@ -304,4 +383,66 @@ public class MainMenu {
         Faculty foz = new Faculty("FOZ", "Faculty of Health Sciences", "FOZ", null, "foz@ukma.edu.ua");
         facultyService.create(foz);
     }*/
+   private void showUsers() {
+       System.out.println("\n=== USERS ===");
+       for (User user : authService.getUsers().values()) {
+           System.out.println(user);
+       }
+   }
+
+    private void createUser() {
+        System.out.print("New login: ");
+        String login = scanner.nextLine().trim();
+
+        System.out.print("New password: ");
+        String password = scanner.nextLine().trim();
+
+        System.out.println("Role: 1 - USER, 2 - MANAGER, 3 - ADMIN");
+        String roleInput = scanner.nextLine().trim();
+
+        Role role = parseRole(roleInput);
+
+        authService.createUser(login, password, role);
+        System.out.println("Користувача створено.");
+    }
+
+    private void changeUserRole() {
+        System.out.print("Login: ");
+        String login = scanner.nextLine().trim();
+
+        System.out.println("New role: 1 - USER, 2 - MANAGER, 3 - ADMIN");
+        String roleInput = scanner.nextLine().trim();
+
+        Role role = parseRole(roleInput);
+
+        authService.changeRole(login, role);
+        System.out.println("Роль змінено.");
+    }
+
+    private void blockOrUnblockUser() {
+        System.out.print("Login: ");
+        String login = scanner.nextLine().trim();
+
+        System.out.println("1 - Block, 2 - Unblock");
+        String action = scanner.nextLine().trim();
+
+        if ("1".equals(action)) {
+            authService.blockUser(login);
+            System.out.println("Користувача заблоковано.");
+        } else if ("2".equals(action)) {
+            authService.unblockUser(login);
+            System.out.println("Користувача розблоковано.");
+        } else {
+            System.out.println("Невірна дія.");
+        }
+    }
+
+    private Role parseRole(String input) {
+        return switch (input) {
+            case "1" -> Role.USER;
+            case "2" -> Role.MANAGER;
+            case "3" -> Role.ADMIN;
+            default -> throw new RuntimeException("Невірно вибрана роль");
+        };
+    }
 }

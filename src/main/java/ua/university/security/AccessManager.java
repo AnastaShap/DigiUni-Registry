@@ -9,11 +9,13 @@ public class AccessManager {
 
     public void requireAnyRole(User user, Set<Role> allowedRoles) {
         if (user == null) {
-            throw new AccessDeniedException("User is not authenticated");
+            throw new AccessDeniedException("Користувач не авторизований");
         }
-        if (!allowedRoles.contains(user.role())) {
+
+        if (!allowedRoles.contains(user.getRole())) {
             throw new AccessDeniedException(
-                    "Access denied for role " + user.role() + ". Allowed roles: " + allowedRoles
+                    "Доступ заборонено для ролі " + user.getRole() +
+                            ". Дозволено: " + allowedRoles
             );
         }
     }
