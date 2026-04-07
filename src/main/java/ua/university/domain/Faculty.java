@@ -19,6 +19,9 @@ public class Faculty implements Serializable {
         this.dean = dean;
         this.contacts = contacts;
     }
+    public Teacher getDean() {
+        return dean;
+    }
 
     public String getName() {
         return name;

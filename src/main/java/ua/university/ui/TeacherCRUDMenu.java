@@ -1,27 +1,29 @@
 package ua.university.ui;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import ua.university.domain.Teacher;
 import ua.university.dto.Email;
 import ua.university.dto.PhoneNumber;
 import ua.university.service.TeacherService;
+import ua.university.ui.teacher.TeacherInputHandler;
 import ua.university.util.ConsoleInputValidator;
-import ua.university.util.ILogger;
+import ua.university.util.Logging.ILogger;
+import ua.university.util.TeacherConsoleView;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
+@Data
+@AllArgsConstructor
 public class TeacherCRUDMenu {
     private final TeacherService teacherService;
     private final ILogger logger;
     private final Scanner scanner;
-
-    public TeacherCRUDMenu(TeacherService teacherService, ILogger logger, Scanner scanner) {
-        this.teacherService = teacherService;
-        this.logger = logger;
-        this.scanner = scanner;
-    }
+    private final TeacherConsoleView view;
+    private final TeacherInputHandler inputHandler;
 
     public void createTeacher() {
         logger.info("=== Create New Teacher ===");
@@ -62,6 +64,7 @@ public class TeacherCRUDMenu {
         LocalDate hireDate = LocalDate.parse(ConsoleInputValidator.readNonEmptyString(scanner));
 
         logger.info("Enter Workload (e.g., 1.0):");
+        // parsing
         double workload = Double.parseDouble(ConsoleInputValidator.readNonEmptyString(scanner));
 
         Teacher teacher = new Teacher(

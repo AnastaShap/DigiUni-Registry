@@ -1,5 +1,6 @@
 package ua.university.ui;
 
+import lombok.AllArgsConstructor;
 import ua.university.domain.Department;
 import ua.university.domain.Faculty;
 import ua.university.domain.Student;
@@ -22,13 +23,14 @@ import ua.university.service.FacultyService;
 import ua.university.service.StudentService;
 import ua.university.ui.student.StudentCRUDMenu;
 import ua.university.util.ConsoleInputValidator;
-import ua.university.util.ILogger;
+import ua.university.util.Logging.ILogger;
 
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.Scanner;
 import java.util.Set;
 
+@AllArgsConstructor
 public class MainMenu {
     private final DepartmentService departmentService;
     private final FacultyService facultyService;
@@ -61,9 +63,11 @@ public class MainMenu {
         IRepository<Department, String> depRepo = new InMemoryDepartmentRepository();
         this.departmentService = new DepartmentService(depRepo);
 
-        this.studentMenu = new StudentCRUDMenu(studentService, departmentService, facultyService, logger, scanner);
-        this.facultyMenu = new FacultyCRUDMenu(facultyService, studentService, logger, scanner);
+        // Прибираємо studentService, бо FacultyCRUDMenu тепер сам знає, як малювати деталі
+        this.facultyMenu = new FacultyCRUDMenu(facultyService, logger, scanner);
         this.departmentMenu = new DepartmentCRUDMenu(departmentService, facultyService, logger, scanner);
+        // прибрати studentService, бо FacultyCRUDMenu тепер сам знає, як малювати деталі
+        this.studentMenu = new StudentCRUDMenu(studentService, departmentService, facultyService, logger, scanner);
 
         loadOrSeedData();
     }

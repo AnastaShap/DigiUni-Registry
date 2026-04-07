@@ -69,4 +69,8 @@ public class Department implements Serializable {
     public void setHead(Teacher head) {
         this.head = head;
     }
+
+    public Teacher getHead() {
+        return head;
+    }
 }

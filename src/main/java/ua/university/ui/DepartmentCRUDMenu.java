@@ -5,8 +5,7 @@ import ua.university.domain.Faculty;
 import ua.university.service.DepartmentService;
 import ua.university.service.FacultyService;
 import ua.university.util.ConsoleInputValidator;
-import ua.university.util.ILogger;
-import ua.university.util.StudentConsoleView;
+import ua.university.util.Logging.ILogger;
 
 import java.util.List;
 import java.util.Optional;

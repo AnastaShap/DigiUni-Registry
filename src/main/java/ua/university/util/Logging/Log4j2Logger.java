@@ -1,4 +1,4 @@
-package ua.university.util;
+package ua.university.util.Logging;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

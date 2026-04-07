@@ -3,7 +3,7 @@ package ua.university.service.multithreading;
 import lombok.RequiredArgsConstructor;
 import ua.university.service.FacultyService;
 import ua.university.service.*;
-import ua.university.util.ILogger;
+import ua.university.util.Logging.ILogger;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;

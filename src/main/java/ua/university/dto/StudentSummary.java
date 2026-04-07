@@ -1,4 +1,4 @@
-package ua.university.domain;
+package ua.university.dto;
 
 // StudentSummary - DTO for print(output)
 public record StudentSummary(
