@@ -7,6 +7,8 @@ import ua.university.domain.Teacher;
 import ua.university.domain.enums.Role;
 import ua.university.domain.enums.StudentStatus;
 import ua.university.domain.enums.StudyForm;
+import ua.university.dto.Email;
+import ua.university.dto.PhoneNumber;
 import ua.university.exception.AccessDeniedException;
 import ua.university.repository.IRepository;
 import ua.university.repository.InMemoryDepartmentRepository;
@@ -153,7 +155,7 @@ public class MainMenu {
 
          // ДЕКАНАТ ФІ
         Teacher deanFit = new Teacher("DFIT", "Глибовець", "Андрій", "Миколайович",
-                LocalDate.of(1978, 1, 1), "a.glybovets@ukma.edu.ua", "+380444636985",
+                LocalDate.of(1978, 1, 1), new Email("a.glybovets@ukma.edu.ua"), new PhoneNumber("+380444636985"),
                 "Professor", "Dr. Sc.", "Academician", LocalDate.of(1990, 9, 1), 1.0);
         facultyService.assignDean("FIT", deanFit);
 
@@ -202,7 +204,7 @@ public class MainMenu {
         Student student1 = new Student(
                 "100001", "Шевченко", "Іван", "Петрович",
                 LocalDate.of(2003, 5, 10),
-                "ivanshevch@ukma.edu.ua", "0999134159",
+                new Email("ivanshevch@ukma.edu.ua"), new PhoneNumber("0999134159"), // Ось так
                 "S001", 2, "ІПЗ-2",
                 2022, StudyForm.BUDGET, StudentStatus.STUDYING
         );
@@ -211,8 +213,7 @@ public class MainMenu {
 
         Student student4 = new Student(
                 "1000004", "Ткач", "Олексій", "Олександрович",
-                LocalDate.of(2003, 4, 17),
-                "tkacholex@ukma.edu.ua", "0637099723",
+                LocalDate.of(2003, 4, 17), new Email("tkacholex@ukma.edu.ua"), new PhoneNumber("0637099723"),
                 "S004", 2, "ІПЗ-2",
                 2022, StudyForm.BUDGET, StudentStatus.STUDYING
         );
@@ -222,7 +223,7 @@ public class MainMenu {
         Student student2 = new Student(
                 "100002", "Коваленко", "Анна", "Олегівна",
                 LocalDate.of(2004, 3, 20),
-                "anna@ukma.edu.ua", "0999120869",
+                new Email("anna@ukma.edu.ua"), new PhoneNumber("0999120869"),
                 "S002", 1, "AВІС-1",
                 2023, StudyForm.CONTRACT, StudentStatus.STUDYING
         );
@@ -232,7 +233,7 @@ public class MainMenu {
         Student student3 = new Student(
                 "140004", "Бондар", "Максим", "Ігорович",
                 LocalDate.of(2002, 11, 2),
-                "max@ukma.edu.ua", "0637099418",
+                new Email("max@ukma.edu.ua"), new PhoneNumber("0667341919"),
                 "S003", 2, "КН-2",
                 2021, StudyForm.BUDGET, StudentStatus.STUDYING
         );

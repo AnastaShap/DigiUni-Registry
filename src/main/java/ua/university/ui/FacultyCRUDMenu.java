@@ -2,6 +2,8 @@ package ua.university.ui;
 
 import ua.university.domain.Faculty;
 import ua.university.domain.Teacher;
+import ua.university.dto.Email;
+import ua.university.dto.PhoneNumber;
 import ua.university.service.FacultyService;
 import ua.university.service.StudentService;
 import ua.university.util.ConsoleInputValidator;
@@ -28,7 +30,7 @@ public class FacultyCRUDMenu {
         this.logger = logger;
         this.scanner = scanner;
 
-        // 🔥 ось ключова магія
+        // ключовий момент
         this.view = new StudentConsoleView(studentService::calculateAge);
     }
 
@@ -151,10 +153,10 @@ public class FacultyCRUDMenu {
         String middleName = ConsoleInputValidator.readNonEmptyString(scanner);
 
         logger.info("Email:");
-        String email = ConsoleInputValidator.readNonEmptyString(scanner); // Можна використати readEmail
+        Email email = new Email(ConsoleInputValidator.readEmail(scanner));
 
         logger.info("Phone:");
-        String phone = ConsoleInputValidator.readPhone(scanner);
+        PhoneNumber phone = new PhoneNumber(ConsoleInputValidator.readPhone(scanner));
 
         logger.info("Position (e.g., Professor):");
         String position = ConsoleInputValidator.readNonEmptyString(scanner);

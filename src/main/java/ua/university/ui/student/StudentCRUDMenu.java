@@ -5,6 +5,8 @@ import ua.university.domain.Faculty;
 import ua.university.domain.Student;
 import ua.university.domain.enums.StudentStatus;
 import ua.university.domain.enums.StudyForm;
+import ua.university.dto.Email;
+import ua.university.dto.PhoneNumber;
 import ua.university.service.DepartmentService;
 import ua.university.service.FacultyService;
 import ua.university.service.StudentService;
@@ -63,9 +65,10 @@ public class StudentCRUDMenu {
         var bDate = inputHandler.readDate();
 
         view.printMessage("Email:");
-        String email = ConsoleInputValidator.readEmail(scanner);
+        Email email = new Email(ConsoleInputValidator.readEmail(scanner));
+
         view.printMessage("Phone:");
-        String phone = ConsoleInputValidator.readPhone(scanner);
+        PhoneNumber phone = new PhoneNumber(ConsoleInputValidator.readPhone(scanner));
 
         view.printMessage("Course Name:");
         int course = ConsoleInputValidator.readCourse(scanner);
