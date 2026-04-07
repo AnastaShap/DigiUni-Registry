@@ -8,6 +8,8 @@ import ua.university.domain.Teacher;
 import ua.university.domain.enums.Role;
 import ua.university.domain.enums.StudentStatus;
 import ua.university.domain.enums.StudyForm;
+import ua.university.dto.Email;
+import ua.university.dto.PhoneNumber;
 import ua.university.exception.AccessDeniedException;
 import ua.university.io.DataStorageService;
 import ua.university.io.UniversityDataSnapshot;
@@ -274,9 +276,9 @@ public class MainMenu {
 
          // ДЕКАНАТ ФІ
         Teacher deanFit = new Teacher("DFIT", "Глибовець", "Андрій", "Миколайович",
-                LocalDate.of(1978, 1, 1), "a.glybovets@ukma.edu.ua", "+380444636985",
+                LocalDate.of(1978, 1, 1),
+                new Email("a.glybovets@ukma.edu.ua"), new PhoneNumber("+380444636985"), // Обгортаємо в DTO
                 "Professor", "Dr. Sc.", "Academician", LocalDate.of(1990, 9, 1), 1.0);
-        facultyService.assignDean("FIT", deanFit);
 
         // DEPARTMENTS
         // --- Кафедри ФІТ (Факультет інформаційних технологій) ---
@@ -323,7 +325,7 @@ public class MainMenu {
         Student student1 = new Student(
                 "100001", "Шевченко", "Іван", "Петрович",
                 LocalDate.of(2003, 5, 10),
-                "ivanshevch@ukma.edu.ua", "0999134159",
+                "ivanshevch@ukma.edu.ua", "+380999134159", // Обгортаємо в DTO
                 "S001", 2, "ІПЗ-2",
                 2022, StudyForm.BUDGET, StudentStatus.STUDYING
         );

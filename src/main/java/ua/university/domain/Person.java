@@ -1,4 +1,7 @@
 package ua.university.domain;
+import ua.university.dto.Email;
+import ua.university.dto.PhoneNumber;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -9,11 +12,11 @@ public abstract class Person implements Serializable {
     private  String firstName;
     private  String middleName;
     private LocalDate birthDate;
-    private String email;
-    private String phone;
+    private Email email;
+    private PhoneNumber phone;
 
     protected Person(String id, String lastName, String firstName, String middleName,
-                     LocalDate birthDate, String email, String phone) {
+                     LocalDate birthDate, Email email, PhoneNumber phone) {
         this.id = id;
         this.lastName = lastName;
         this.firstName = firstName;
@@ -69,19 +72,19 @@ public abstract class Person implements Serializable {
         this.birthDate = birthDate;
     }
 
-    public String getEmail() {
+    public Email getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(Email email) {
         this.email = email;
     }
 
-    public String getPhone() {
+    public PhoneNumber getPhone() {
         return phone;
     }
 
-    public void setPhone(String phone) {
+    public void setPhone(PhoneNumber phone) {
         this.phone = phone;
     }
 

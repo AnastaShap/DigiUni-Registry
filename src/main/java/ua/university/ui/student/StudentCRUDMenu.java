@@ -3,16 +3,15 @@ package ua.university.ui.student;
 import ua.university.domain.Department;
 import ua.university.domain.Faculty;
 import ua.university.domain.Student;
-import ua.university.domain.enums.StudentStatus;
-import ua.university.domain.enums.StudyForm;
+import ua.university.dto.Email;
+import ua.university.dto.PhoneNumber;
 import ua.university.service.DepartmentService;
 import ua.university.service.FacultyService;
 import ua.university.service.StudentService;
 import ua.university.util.ConsoleInputValidator;
-import ua.university.util.ILogger;
+import ua.university.util.Logging.ILogger;
 import ua.university.util.StudentConsoleView;
 
-import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -35,11 +34,10 @@ public class StudentCRUDMenu {
         this.studentService = studentService;
         this.departmentService = departmentService;
         this.facultyService = facultyService;
-        this.view = new StudentConsoleView(studentService::calculateAge);
+        this.view = new StudentConsoleView(studentService::calculateAge); //
 
         this.logger = logger;
         this.scanner = scanner;
-
 
         this.inputHandler = new StudentInputHandler(scanner, view);
         this.searchManager = new StudentSearchAndReportManager(studentService, view, scanner);
@@ -62,43 +60,45 @@ public class StudentCRUDMenu {
 
         var bDate = inputHandler.readDate();
 
+        // Wrap inputs into Record types to avoid primitive obsession
         view.printMessage("Email:");
-        String email = ConsoleInputValidator.readEmail(scanner);
-        view.printMessage("Phone:");
-        String phone = ConsoleInputValidator.readPhone(scanner);
+        Email email = new Email(ConsoleInputValidator.readEmail(scanner));
 
-        view.printMessage("Course Name:");
+        view.printMessage("Phone:");
+        PhoneNumber phone = new PhoneNumber(ConsoleInputValidator.readPhone(scanner));
+
+        view.printMessage("Course (1-6):");
         int course = ConsoleInputValidator.readCourse(scanner);
 
-        view.printMessage("Group Name:");
+        view.printMessage("Group Name (e.g., IPZ-1):");
         String group = ConsoleInputValidator.readGroup(scanner);
 
-        view.printMessage("Enter Student ID: ");
+        view.printMessage("Enter Student/Gradebook ID:");
         String sId = ConsoleInputValidator.readNonEmptyString(scanner);
 
-        view.printMessage("Enter Student Faculty: ");
+        view.printMessage("Enter Faculty Code:");
         String faculCode = ConsoleInputValidator.readNonEmptyString(scanner);
         Optional<Faculty> faculOpt = facultyService.findByCode(faculCode);
+
+        if (faculOpt.isEmpty()) {
+            logger.info("Error: Faculty with code " + faculCode + " not found!");
+            return;
+        }
         Faculty faculty = faculOpt.get();
 
-        /// TO-DO: Transfer Department logic
-        view.printMessage("Enter Department Code (e.g., CS-01):");
+        view.printMessage("Enter Department Code:");
         String deptCode = ConsoleInputValidator.readNonEmptyString(scanner);
-
-        // Шукаємо кафедру через сервіс
         Optional<Department> deptOptional = departmentService.findByCode(deptCode);
 
         if (deptOptional.isEmpty()) {
             logger.info("Error: Department with code " + deptCode + " not found!");
-            return; // Зупиняємо створення, якщо кафедри не існує
+            return;
         }
+        Department department = deptOptional.get();
 
-
-        int entryYear = inputHandler.readInt("Entry Study Year (e.g., 2024): ");
+        int entryYear = inputHandler.readInt("Entry Study Year:");
         var form = inputHandler.readStudyForm();
         var status = inputHandler.readStudentStatus();
-
-        Department department = deptOptional.get();
 
         Student student = new Student(
                 id, lastName, firstName, middleName,
@@ -106,53 +106,74 @@ public class StudentCRUDMenu {
                 department,
                 course, group, entryYear, form, status
         );
+
         try {
-            studentService.create(student);
+            studentService.create(student); //
             logger.info("Student created successfully.");
         } catch (Exception e) {
             logger.info("Error: " + e.getMessage());
         }
     }
 
-    public void showStudents() { searchManager.showAllStudentsMenu(); }
+    public void showStudents() {
+        searchManager.showAllStudentsMenu();
+    }
 
-    public void searchMenu() { searchManager.showSearchMenu(); }
+    public void searchMenu() {
+        searchManager.showSearchMenu();
+    }
 
     public void deleteStudent() {
         view.printMessage("Enter System ID to delete:");
-        studentService.delete(scanner.nextLine());
-        logger.info("Deleted successfully.");
+        String id = scanner.nextLine().trim();
+        try {
+            studentService.delete(id);
+            logger.info("Student deleted successfully.");
+        } catch (Exception e) {
+            logger.info("Error: " + e.getMessage());
+        }
     }
 
     public void updateStudent() {
         view.printMessage("Enter System ID to update:");
-        String id = scanner.nextLine();
+        String id = scanner.nextLine().trim();
         var opt = studentService.findById(id);
 
         if (opt.isEmpty()) {
-            logger.info("Not found.");
+            logger.info("Student not found.");
             return;
         }
 
         Student s = opt.get();
         view.printDetails(s);
-        view.printMessage("1-Name, 2-Course, 3-Group, 4-Status, 0-Exit"); // TO-DO: phone and email...
+        view.printMessage("Select property to update: 1-Name, 2-Course, 3-Group, 4-Status, 0-Exit");
 
         int choice = ConsoleInputValidator.readMenuOption(scanner, 0, 4);
         switch (choice) {
             case 1 -> {
+                view.printMessage("Enter New Last Name:");
                 String ln = ConsoleInputValidator.readNonEmptyString(scanner);
+                view.printMessage("Enter New First Name:");
                 String fn = ConsoleInputValidator.readNonEmptyString(scanner);
+                view.printMessage("Enter New Middle Name:");
                 String mn = ConsoleInputValidator.readNonEmptyString(scanner);
                 studentService.changeName(s.getId(), ln, fn, mn);
+                logger.info("Name updated.");
             }
-            case 2 -> studentService.changeCourse(s.getId(), ConsoleInputValidator.readCourse(scanner));
-            case 3 -> studentService.changeGroup(s.getId(), ConsoleInputValidator.readGroup(scanner));
+            case 2 -> {
+                studentService.changeCourse(s.getId(), ConsoleInputValidator.readCourse(scanner));
+                logger.info("Course updated.");
+            }
+            case 3 -> {
+                studentService.changeGroup(s.getId(), ConsoleInputValidator.readGroup(scanner));
+                logger.info("Group updated.");
+            }
             case 4 -> {
                 s.setStatus(inputHandler.readStudentStatus());
                 studentService.update(s);
+                logger.info("Status updated.");
             }
+            default -> view.printMessage("Update cancelled.");
         }
-        logger.info("Updated.");
     }
 }

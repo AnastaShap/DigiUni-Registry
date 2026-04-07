@@ -74,7 +74,7 @@ public class TeacherCRUDMenu {
         );
 
         try {
-            teacherService.addTeacher(teacher);
+            teacherService.create(teacher);
             logger.info("Teacher added successfully.");
         } catch (Exception e) {
             logger.info("Error: " + e.getMessage());

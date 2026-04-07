@@ -3,6 +3,7 @@ package ua.university.repository.student;
 import ua.university.domain.Student;
 import ua.university.domain.enums.StudentStatus;
 import ua.university.domain.enums.StudyForm;
+import ua.university.repository.InMemoryRepository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 // In-memory реалізація
-public class InMemoryStudentRepository implements IStudentRepository {
+public class InMemoryStudentRepository extends InMemoryRepository<Student, String> implements IStudentRepository {
 
     private final List<Student> students = new ArrayList<>();
 
@@ -40,7 +41,7 @@ public class InMemoryStudentRepository implements IStudentRepository {
     }
 
     // testing data
-    public void loadTestData(InMemoryStudentRepository repository) {
+    /*public void loadTestData(InMemoryStudentRepository repository) {
         repository.save(new Student(
                 "1", "Шевченко", "Іван", "Петрович",
                 LocalDate.of(2003, 5, 10),
@@ -64,5 +65,5 @@ public class InMemoryStudentRepository implements IStudentRepository {
                 "S003", 2, "КН-2",
                 2021, StudyForm.BUDGET, StudentStatus.STUDYING
         ));
-    }
+    }*/
 }

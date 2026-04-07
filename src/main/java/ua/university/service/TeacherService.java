@@ -1,7 +1,8 @@
 package ua.university.service;
 
 import ua.university.domain.Teacher;
-import ua.university.exception.TeacherNotFoundException; // Changed to TeacherNotFound
+import ua.university.exception.DuplicateEntityException;
+import ua.university.exception.TeacherNotFoundException;
 import ua.university.repository.IRepository;
 
 import java.util.List;
@@ -14,12 +15,26 @@ public class TeacherService {
         this.teacherRepository = repository;
     }
 
-    public void addTeacher(Teacher teacher) {
-        teacherRepository.save(teacher); // Assuming your IRepository uses 'save' or 'add'
+    /**
+     * Створює нового викладача.
+     * @throws DuplicateEntityException якщо ID вже зайнятий
+     */
+    public void create(Teacher teacher) {
+        if (teacherRepository.findById(teacher.getId()).isPresent()) {
+            throw new DuplicateEntityException("Teacher with ID " + teacher.getId() + " already exists!");
+        }
+        teacherRepository.save(teacher);
+    }
+
+    /**
+     * Оновлює дані існуючого викладача.
+     */
+    public void update(Teacher teacher) {
+        getOrThrow(teacher.getId()); // Перевірка на існування
+        teacherRepository.save(teacher);
     }
 
     public List<Teacher> getAll() {
-        // Use the repository's method to get all records
         return teacherRepository.findAll();
     }
 
@@ -28,7 +43,23 @@ public class TeacherService {
     }
 
     /**
-     * Helper method to get a teacher or throw an exception if not found.
+     * Повертає викладача або кидає виняток, якщо його не знайдено.
+     */
+    public Teacher getById(String id) {
+        return teacherRepository.findById(id)
+                .orElseThrow(() -> new TeacherNotFoundException(id));
+    }
+
+    /**
+     * Видаляє викладача за ідентифікатором.
+     */
+    public void delete(String id) {
+        getOrThrow(id); // Валідація перед видаленням
+        teacherRepository.deleteById(id);
+    }
+
+    /**
+     * Допоміжний метод для перевірки існування.
      */
     private Teacher getOrThrow(String id) {
         return teacherRepository.findById(id)
