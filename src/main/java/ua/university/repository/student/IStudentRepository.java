@@ -1,3 +1,6 @@
+
+/// == LEGACY CLASS FOR STUDENT REPO ==
+
 package ua.university.repository.student;
 
 import ua.university.domain.Student;
