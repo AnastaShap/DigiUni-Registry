@@ -56,8 +56,8 @@ public class StudentService {
         repository.save(student); // upsert
     }
 
-    // ===== SEARCH =====
 
+    // ===== SEARCH =====
 
     // Generalised search using Predicate
     public List<Student> findBy(Predicate<Student> filter) {
@@ -223,6 +223,35 @@ public class StudentService {
             return 0;
         }
         return Period.between(student.getBirthDate(), LocalDate.now()).getYears();
+    }
+
+
+    /// !!! ------ KT-3 Stream API (2+ звіти statistics) ---------
+    /// використано Stream API для агрегації та статистики: groupingBy, counting, average, max.
+    public Map<Integer, Long> countByCourse() {
+        return repository.findAll().stream()
+                .collect(Collectors.groupingBy(
+                        Student::getCourse,
+                        Collectors.counting()
+                ));
+    }
+
+    public double getAverageAge() {
+        return repository.findAll().stream()
+                .filter(s -> s.getBirthDate() != null)
+                .mapToInt(this::calculateAge)
+                .average()
+                .orElse(0);
+    }
+
+    public Optional<Map.Entry<String, Long>> getLargestGroup() {
+        return repository.findAll().stream()
+                .collect(Collectors.groupingBy(
+                        Student::getGroup,
+                        Collectors.counting()
+                ))
+                .entrySet().stream()
+                .max(Map.Entry.comparingByValue());
     }
 
 }

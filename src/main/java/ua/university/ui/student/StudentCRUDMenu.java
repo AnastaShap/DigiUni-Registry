@@ -155,4 +155,23 @@ public class StudentCRUDMenu {
         }
         logger.info("Updated.");
     }
+
+    // --- KT-3 SHOW STATISTICS TEST STREAM API
+
+    public void showStatistics() {
+        logger.info("=== Statistics ===");
+
+        var byCourse = studentService.countByCourse();
+        byCourse.forEach((course, count) ->
+                logger.info("Course " + course + ": " + count)
+        );
+
+        double avgAge = studentService.getAverageAge();
+        logger.info("Average age: " + avgAge);
+
+        studentService.getLargestGroup()
+                .ifPresent(e ->
+                        logger.info("Largest group: " + e.getKey() + " (" + e.getValue() + ")")
+                );
+    }
 }
