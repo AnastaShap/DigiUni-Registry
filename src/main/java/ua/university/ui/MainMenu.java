@@ -20,6 +20,7 @@ import ua.university.security.User;
 import ua.university.service.DepartmentService;
 import ua.university.service.FacultyService;
 import ua.university.service.StudentService;
+import ua.university.service.multithreading.AutoSaveService;
 import ua.university.ui.student.StudentCRUDMenu;
 import ua.university.util.ConsoleInputValidator;
 import ua.university.util.ILogger;
@@ -41,6 +42,9 @@ public class MainMenu {
     private final AccessManager accessManager;
     private User currentUser;
 
+    // для багатопоточості
+    private final AutoSaveService autoSaveService;
+
     public MainMenu(ILogger logger) {
         this.scanner = new Scanner(System.in);
         this.authService = new AuthService();
@@ -59,7 +63,11 @@ public class MainMenu {
         this.facultyMenu = new FacultyCRUDMenu(facultyService, studentService, logger, scanner);
         this.departmentMenu = new DepartmentCRUDMenu(departmentService, facultyService, logger, scanner);
 
+        this.autoSaveService = new AutoSaveService(facultyService, studentService, logger);
+
         seedData();
+        // Запускаємо автозбереження кожні 60 секунд
+        autoSaveService.startAutoSave(60);
     }
 
     public void run() {

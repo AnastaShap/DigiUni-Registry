@@ -6,6 +6,7 @@ public class Main {
 
         // Menu test
         MainMenu mainMenu = new MainMenu(new ConsoleLogger());
+
         mainMenu.run();
     }
 }
