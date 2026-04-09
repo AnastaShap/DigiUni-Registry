@@ -1,17 +1,23 @@
 package ua.university.domain;
+import lombok.Getter;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Department implements Serializable {
 
+    private static final long serialVersionUID = 291082398554632363L;
     private String code;
     private String name;
     private Faculty faculty;
     private Teacher head;
     private String location;
+    @Getter
     private List<Student> students = new ArrayList<>();
     private List<Teacher> teachers = new ArrayList<>();
+
 
     public Department(String code, String name, Faculty faculty,
                       Teacher head, String location) {
@@ -20,10 +26,6 @@ public class Department implements Serializable {
         this.faculty = faculty;
         this.head = head;
         this.location = location;
-    }
-
-    public List<Student> getStudents() {
-        return students;
     }
 
     public String getName() {
@@ -70,7 +72,7 @@ public class Department implements Serializable {
         this.head = head;
     }
 
-    public Teacher getHead() {
-        return head;
+    public Optional<Teacher> getHead() {
+        return Optional.ofNullable(head);
     }
 }

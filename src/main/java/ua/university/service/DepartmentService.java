@@ -1,5 +1,6 @@
 package ua.university.service;
 
+import lombok.extern.slf4j.Slf4j;
 import ua.university.domain.Department;
 import ua.university.domain.Faculty;
 import ua.university.domain.Student;
@@ -10,6 +11,7 @@ import ua.university.repository.IRepository;
 
 import java.util.*;
 
+@Slf4j
 public class DepartmentService {
 
     private final IRepository<Department, String> repository;
@@ -33,6 +35,7 @@ public class DepartmentService {
     public void update(Department department) {
         Objects.requireNonNull(department);
         repository.save(department);
+        log.info("Department updated: {}", department.getCode());
     }
 
     public void delete(String code) {
@@ -50,30 +53,26 @@ public class DepartmentService {
 
     // Методи бізнес-логіки
     public void addStudent(String departmentCode, Student student) {
-        getOrThrow(departmentCode).getStudents().add(student);
+        Department dep = getOrThrow(departmentCode);
+        dep.getStudents().add(student);
+        student.setDepartment(dep); // ПРАВКА: Встановлюємо зворотний зв'язок
+        log.info("Student {} added to department {}", student.getId(), departmentCode);
     }
 
     public void assignHead(String departmentCode, Teacher teacher) {
         getOrThrow(departmentCode).setHead(teacher);
+        log.info("Teacher {} assigned as head of department {}", teacher.getId(), departmentCode);
     }
 
     public void changeName(String departmentCode, String newName) {
-        Department dep = getOrThrow(departmentCode);
-        dep.setName(newName);
+        getOrThrow(departmentCode).setName(newName);
     }
 
     public void changeLocation(String departmentCode, String newLocation) {
-        Department dep = getOrThrow(departmentCode);
-        dep.setLocation(newLocation);
+        getOrThrow(departmentCode).setLocation(newLocation);
     }
 
     public void changeFaculty(String departmentCode, Faculty faculty) {
-        Department dep = getOrThrow(departmentCode);
-        dep.setFaculty(faculty);
+        getOrThrow(departmentCode).setFaculty(faculty);
     }
-
-//    private Department getDepartmentOrThrow(String code) {
-//        return findByCode(code)
-//                .orElseThrow(() -> new DepartmentNotFoundException(code));
-//    }
 }
