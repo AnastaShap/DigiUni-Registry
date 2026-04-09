@@ -32,8 +32,17 @@ public final class Student extends Person implements Serializable { //
                    String studentId, Faculty faculty, Department department,
                    int course, String group, int entryYear,
                    StudyForm studyForm, StudentStatus status) {
-        // Виправлено синтаксис: просто передаємо об'єкти, а не оголошуємо їх типи
         super(id, lastName, firstName, middleName, birthDate, email, phone);
+
+        // Валідація курсу
+        if (course < 1 || course > 6) {
+            throw new IllegalArgumentException("Course must be between 1 and 6");
+        }
+        // Валідація року вступу
+        if (entryYear > LocalDate.now().getYear()) {
+            throw new IllegalArgumentException("Entry year cannot be in the future");
+        }
+
         this.studentId = studentId;
         this.faculty = faculty;
         this.department = department;

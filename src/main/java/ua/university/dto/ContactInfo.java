@@ -1,3 +1,5 @@
 package ua.university.dto;
 
-public record ContactInfo(Email email, PhoneNumber phoneNumber) {}
+import java.io.Serializable;
+
+public record ContactInfo(Email email, PhoneNumber phoneNumber) implements Serializable {}

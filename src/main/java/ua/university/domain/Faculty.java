@@ -2,6 +2,8 @@ package ua.university.domain;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 
 public class Faculty implements Serializable {
     private String code;
@@ -19,8 +21,8 @@ public class Faculty implements Serializable {
         this.dean = dean;
         this.contacts = contacts;
     }
-    public Teacher getDean() {
-        return dean;
+    public Optional<Teacher> getDean() {
+        return Optional.ofNullable(dean);
     }
 
     public String getName() {

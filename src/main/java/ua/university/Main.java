@@ -6,6 +6,7 @@ public class Main {
     public static void main(String[] args) {
         // Menu test
         MainMenu mainMenu = new MainMenu(new ConsoleLogger());
+
         mainMenu.run();
     }
 }

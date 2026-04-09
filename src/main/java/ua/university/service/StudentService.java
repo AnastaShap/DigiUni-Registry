@@ -108,11 +108,12 @@ public class StudentService {
 
 
      //Finds all students belonging to a specific department.
-    public List<Student> findByDepartment(String departmentId) {
-        return repository.findAll().stream()
-                .filter(s -> s.getDepartment().equals(departmentId))
-                .toList();
-    }
+     public List<Student> findByDepartment(String departmentId) {
+         return repository.findAll().stream()
+                 .filter(s -> s.getDepartment() != null &&
+                         s.getDepartment().getCode().equals(departmentId))
+                 .toList();
+     }
 
     public List<Student> findAdults() {
         return repository.findAll().stream()

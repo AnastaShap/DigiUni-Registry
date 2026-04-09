@@ -1,5 +1,6 @@
 package ua.university.service;
 
+import lombok.extern.slf4j.Slf4j;
 import ua.university.domain.Teacher;
 import ua.university.exception.DuplicateEntityException;
 import ua.university.exception.TeacherNotFoundException;
@@ -8,6 +9,7 @@ import ua.university.repository.IRepository;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 public class TeacherService {
     private final IRepository<Teacher, String> teacherRepository;
 
@@ -15,23 +17,19 @@ public class TeacherService {
         this.teacherRepository = repository;
     }
 
-    /**
-     * Створює нового викладача.
-     * @throws DuplicateEntityException якщо ID вже зайнятий
-     */
     public void create(Teacher teacher) {
         if (teacherRepository.findById(teacher.getId()).isPresent()) {
+            log.warn("Attempt to create duplicate teacher: {}", teacher.getId());
             throw new DuplicateEntityException("Teacher with ID " + teacher.getId() + " already exists!");
         }
         teacherRepository.save(teacher);
+        log.info("Teacher created: {} (ID: {})", teacher.getFullName(), teacher.getId());
     }
 
-    /**
-     * Оновлює дані існуючого викладача.
-     */
     public void update(Teacher teacher) {
-        getOrThrow(teacher.getId()); // Перевірка на існування
+        getOrThrow(teacher.getId());
         teacherRepository.save(teacher);
+        log.info("Teacher updated: {}", teacher.getId());
     }
 
     public List<Teacher> getAll() {
@@ -42,25 +40,17 @@ public class TeacherService {
         return teacherRepository.findById(id);
     }
 
-    /**
-     * Повертає викладача або кидає виняток, якщо його не знайдено.
-     */
     public Teacher getById(String id) {
         return teacherRepository.findById(id)
                 .orElseThrow(() -> new TeacherNotFoundException(id));
     }
 
-    /**
-     * Видаляє викладача за ідентифікатором.
-     */
     public void delete(String id) {
-        getOrThrow(id); // Валідація перед видаленням
+        getOrThrow(id);
         teacherRepository.deleteById(id);
+        log.info("Teacher deleted: {}", id);
     }
 
-    /**
-     * Допоміжний метод для перевірки існування.
-     */
     private Teacher getOrThrow(String id) {
         return teacherRepository.findById(id)
                 .orElseThrow(() -> new TeacherNotFoundException(id));
