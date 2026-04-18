@@ -45,3 +45,11 @@
 2026-04-08 11:12:42 [main] INFO  ua.university.service.FacultyService - Faculty created: FPN
 2026-04-08 11:12:42 [main] INFO  ua.university.service.FacultyService - Faculty created: FGN
 2026-04-08 11:12:42 [main] INFO  ua.university.service.FacultyService - Faculty created: FEN
+2026-04-09 13:50:40 [main] INFO  ua.university.io.DataStorageService - Data successfully loaded from: data\university-data.bin
+2026-04-09 13:50:40 [main] INFO  ua.university.service.FacultyService - Faculty created: FIT
+2026-04-09 13:50:40 [main] INFO  ua.university.service.FacultyService - Faculty created: FOZ
+2026-04-09 13:50:40 [main] INFO  ua.university.service.FacultyService - Faculty created: FSNST
+2026-04-09 13:50:40 [main] INFO  ua.university.service.FacultyService - Faculty created: FPSN
+2026-04-09 13:50:40 [main] INFO  ua.university.service.FacultyService - Faculty created: FPN
+2026-04-09 13:50:40 [main] INFO  ua.university.service.FacultyService - Faculty created: FGN
+2026-04-09 13:50:40 [main] INFO  ua.university.service.FacultyService - Faculty created: FEN

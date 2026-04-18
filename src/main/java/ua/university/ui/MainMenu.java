@@ -23,6 +23,7 @@ import ua.university.security.User;
 import ua.university.service.DepartmentService;
 import ua.university.service.FacultyService;
 import ua.university.service.StudentService;
+import ua.university.service.multithreading.AutoSaveService;
 import ua.university.ui.student.StudentCRUDMenu;
 import ua.university.util.ConsoleInputValidator;
 import ua.university.util.Logging.ILogger;
@@ -49,6 +50,8 @@ public class MainMenu {
     private final DataStorageService dataStorageService;
     private final Path dataFile;
 
+    private final AutoSaveService autoSaveService;
+
     public MainMenu(ILogger logger) {
         this.dataStorageService = new DataStorageService();
         this.dataFile = Path.of("data", "university-data.bin");
@@ -71,7 +74,16 @@ public class MainMenu {
         // прибрати studentService, бо FacultyCRUDMenu тепер сам знає, як малювати деталі
         this.studentMenu = new StudentCRUDMenu(studentService, departmentService, facultyService, logger, scanner);
 
+        this.autoSaveService = new AutoSaveService(
+                this.dataStorageService,
+                this.dataFile,
+                this.facultyService,
+                this.departmentService,
+                this.studentService,
+                logger
+        );
         loadOrSeedData();
+        this.autoSaveService.startAutoSave(60);
     }
     private void loadOrSeedData() {
         if (dataStorageService.exists(dataFile)) {
@@ -173,7 +185,8 @@ public class MainMenu {
                     }
 
                     case 0 -> {
-                        saveData();
+                        autoSaveService.stop(); // Зупиняємо фоновий потік
+                        saveData();             // Фінальне збереження перед виходом
                         return;
                     }
                 }
