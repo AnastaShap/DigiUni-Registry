@@ -33,7 +33,6 @@ import java.time.LocalDate;
 import java.util.Scanner;
 import java.util.Set;
 
-@AllArgsConstructor
 public class MainMenu {
     private final DepartmentService departmentService;
     private final FacultyService facultyService;
@@ -59,19 +58,14 @@ public class MainMenu {
         this.authService = new AuthService();
         this.accessManager = new AccessManager();
 
-        InMemoryStudentRepository repo = new InMemoryStudentRepository();
-        this.studentService = new StudentService(repo);
+        // Ініціалізація репозиторіїв та сервісів
+        this.studentService = new StudentService(new InMemoryStudentRepository());
+        this.facultyService = new FacultyService(new InMemoryFacultyRepository());
+        this.departmentService = new DepartmentService(new InMemoryDepartmentRepository());
 
-        IRepository<Faculty, String> faculRepo = new InMemoryFacultyRepository();
-        this.facultyService = new FacultyService(faculRepo);
-
-        IRepository<Department, String> depRepo = new InMemoryDepartmentRepository();
-        this.departmentService = new DepartmentService(depRepo);
-
-        // Прибираємо studentService, бо FacultyCRUDMenu тепер сам знає, як малювати деталі
+        // Переконайся, що ці конструктори співпадають з оголошенням у класах Menu
         this.facultyMenu = new FacultyCRUDMenu(facultyService, logger, scanner);
         this.departmentMenu = new DepartmentCRUDMenu(departmentService, facultyService, logger, scanner);
-        // прибрати studentService, бо FacultyCRUDMenu тепер сам знає, як малювати деталі
         this.studentMenu = new StudentCRUDMenu(studentService, departmentService, facultyService, logger, scanner);
 
         this.autoSaveService = new AutoSaveService(
@@ -82,25 +76,24 @@ public class MainMenu {
                 this.studentService,
                 logger
         );
+
         loadOrSeedData();
         this.autoSaveService.startAutoSave(60);
     }
+
     private void loadOrSeedData() {
         if (dataStorageService.exists(dataFile)) {
             UniversityDataSnapshot snapshot = dataStorageService.load(dataFile);
-
             if (snapshot != null) {
-                snapshot.faculties().forEach(facultyService::create);
-                snapshot.departments().forEach(departmentService::create);
-                snapshot.students().forEach(studentService::create);
-                System.out.println("\n" +
-                        "Data loaded from a file.");
+                // Використовуємо update, щоб не було DuplicateEntityException
+                snapshot.faculties().forEach(facultyService::update);
+                snapshot.departments().forEach(departmentService::update);
+                snapshot.students().forEach(studentService::update);
+                System.out.println("Data loaded from file.");
                 return;
             }
         }
-
         seedData();
-        saveData();
     }
     private void saveData() {
         UniversityDataSnapshot snapshot = new UniversityDataSnapshot(
@@ -334,6 +327,7 @@ public class MainMenu {
         departmentService.create(law);
         facultyService.addDepartment("FPN", law);
 
+
         // -- Студенти ФІ --
         // Студент 1
         Student student1 = new Student(
@@ -344,7 +338,6 @@ public class MainMenu {
                 2022, StudyForm.BUDGET, StudentStatus.STUDYING
         );
         studentService.create(student1);
-        student1.setDepartment(informatics);
 
         Student student4 = new Student(
                 "1000004", "Ткач", "Олексій", "Олександрович",
@@ -354,7 +347,6 @@ public class MainMenu {
                 2022, StudyForm.BUDGET, StudentStatus.STUDYING
         );
         studentService.create(student4);
-        student4.setDepartment(informatics); // ПРАВКА: student4 замість student1
 
         Student student2 = new Student(
                 "100002", "Коваленко", "Анна", "Олегівна",
@@ -364,7 +356,6 @@ public class MainMenu {
                 2023, StudyForm.CONTRACT, StudentStatus.STUDYING
         );
         studentService.create(student2);
-        student2.setDepartment(informatics); // ПРАВКА: student2 замість student1
 
         Student student3 = new Student(
                 "140004", "Бондар", "Максим", "Ігорович",
@@ -374,7 +365,18 @@ public class MainMenu {
                 2021, StudyForm.BUDGET, StudentStatus.STUDYING
         );
         studentService.create(student3);
-        student3.setDepartment(informatics); // ПРАВКА: student3 замість student1
+
+
+        // Замість student1.setDepartment(informatics);
+        departmentService.addStudent("INF", student1);
+        // Замість student4.setDepartment(informatics);
+        departmentService.addStudent("INF", student4);
+
+        // Замість student2.setDepartment(informatics);
+        departmentService.addStudent("INF", student2);
+
+     // Замість student3.setDepartment(informatics);
+        departmentService.addStudent("INF", student3);
     }
 
    private void showUsers() {

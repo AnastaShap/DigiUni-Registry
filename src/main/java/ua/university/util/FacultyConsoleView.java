@@ -27,6 +27,7 @@ public class FacultyConsoleView {
                 .orElse("Not assigned");
 
         System.out.println("Dean: " + deanName);
+
         System.out.println("Contacts: " + f.getContacts());
     }
 }

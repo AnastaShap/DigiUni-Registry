@@ -44,6 +44,10 @@ public class Department implements Serializable {
         return teachers;
     }
 
+    public List<Student> getStudents() {
+        return students;
+    }
+
     // added  code to show
     @Override
     public String toString() {
