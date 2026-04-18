@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public abstract class Person implements Serializable {
+public abstract sealed class Person implements Serializable permits Student, Teacher{
     private String id;
     private  String lastName;
     private  String firstName;
@@ -17,6 +17,13 @@ public abstract class Person implements Serializable {
 
     protected Person(String id, String lastName, String firstName, String middleName,
                      LocalDate birthDate, Email email, PhoneNumber phone) {
+        if (id == null || id.isBlank()) {
+            throw new IllegalArgumentException("ID cannot be empty");
+        }
+        if (birthDate != null && birthDate.isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("Birth date cannot be in the future");
+        }
+
         this.id = id;
         this.lastName = lastName;
         this.firstName = firstName;

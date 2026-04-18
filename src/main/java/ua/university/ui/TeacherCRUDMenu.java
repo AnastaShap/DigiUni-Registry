@@ -1,10 +1,7 @@
 package ua.university.ui;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import ua.university.domain.Teacher;
-import ua.university.dto.Email;
-import ua.university.dto.PhoneNumber;
 import ua.university.service.TeacherService;
 import ua.university.ui.teacher.TeacherInputHandler;
 import ua.university.util.ConsoleInputValidator;
@@ -13,10 +10,8 @@ import ua.university.util.TeacherConsoleView;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
 
-@Data
 @AllArgsConstructor
 public class TeacherCRUDMenu {
     private final TeacherService teacherService;
@@ -28,50 +23,29 @@ public class TeacherCRUDMenu {
     public void createTeacher() {
         logger.info("=== Create New Teacher ===");
 
-        logger.info("Enter ID:");
-        String id = ConsoleInputValidator.readNonEmptyString(scanner);
-
-        logger.info("Enter Last Name:");
+        String id = ConsoleInputValidator.readNumericId(scanner);
         String lastName = ConsoleInputValidator.readNonEmptyString(scanner);
-
-        logger.info("Enter First Name:");
         String firstName = ConsoleInputValidator.readNonEmptyString(scanner);
-
-        logger.info("Enter Middle Name:");
         String middleName = ConsoleInputValidator.readNonEmptyString(scanner);
 
-        // Припускаємо, що ConsoleInputValidator має методи для роботи з датами та числами
-        // Якщо ні, можна використати LocalDate.parse(scanner.nextLine())
-        logger.info("Enter Birth Date (YYYY-MM-DD):");
-        LocalDate birthDate = LocalDate.parse(ConsoleInputValidator.readNonEmptyString(scanner));
+        LocalDate birthDate = inputHandler.readDate("Enter Birth Date");
+        var email = inputHandler.readEmail();
+        var phone = inputHandler.readPhone();
 
-        logger.info("Enter Email:");
-        Email email = new Email(ConsoleInputValidator.readNonEmptyString(scanner));
-
-        logger.info("Enter Phone:");
-        PhoneNumber phone = new PhoneNumber(ConsoleInputValidator.readNonEmptyString(scanner));
-
-        logger.info("Enter Position (e.g., Professor, Associate Professor):");
+        logger.info("Enter Position:");
         String position = ConsoleInputValidator.readNonEmptyString(scanner);
-
-        logger.info("Enter Degree (e.g., PhD):");
+        logger.info("Enter Degree:");
         String degree = ConsoleInputValidator.readNonEmptyString(scanner);
-
         logger.info("Enter Academic Title:");
-        String academicTitle = ConsoleInputValidator.readNonEmptyString(scanner);
+        String title = ConsoleInputValidator.readNonEmptyString(scanner);
 
-        logger.info("Enter Hire Date (YYYY-MM-DD):");
-        LocalDate hireDate = LocalDate.parse(ConsoleInputValidator.readNonEmptyString(scanner));
+        LocalDate hireDate = inputHandler.readDate("Enter Hire Date");
 
         logger.info("Enter Workload (e.g., 1.0):");
-        // parsing
         double workload = Double.parseDouble(ConsoleInputValidator.readNonEmptyString(scanner));
 
-        Teacher teacher = new Teacher(
-                id, lastName, firstName, middleName, birthDate,
-                email, phone, position, degree, academicTitle,
-                hireDate, workload
-        );
+        Teacher teacher = new Teacher(id, lastName, firstName, middleName, birthDate,
+                email, phone, position, degree, title, hireDate, workload);
 
         try {
             teacherService.create(teacher);
@@ -87,39 +61,15 @@ public class TeacherCRUDMenu {
             logger.info("No teachers found.");
             return;
         }
-
-        logger.info("=== Teachers List ===");
-        teachers.forEach(t -> {
-            String output = String.format("ID: %-5s | Name: %-25s | Position: %-15s | Workload: %.1f",
-                    t.getId(),
-                    t.getLastName() + " " + t.getFirstName().charAt(0) + ".",
-                    t.getPosition(),
-                    // Припускаємо наявність getter-а для workload або використання toString()
-                    1.0); // Заглушка, якщо немає прямого доступу
-            logger.info(t.toString());
-        });
-    }
-
-    public void findTeacherById() {
-        logger.info("Enter Teacher ID to find:");
-        String id = ConsoleInputValidator.readNonEmptyString(scanner);
-
-        Optional<Teacher> teacher = teacherService.findById(id);
-        if (teacher.isPresent()) {
-            logger.info("Teacher found: " + teacher.get());
-        } else {
-            logger.info("Teacher with ID " + id + " not found.");
-        }
+        view.printList(teachers); // Використовуємо в’юшку для красивого виводу
     }
 
     public void deleteTeacher() {
-        showTeachers();
         logger.info("Enter Teacher ID to delete:");
-        String id = ConsoleInputValidator.readNonEmptyString(scanner);
-
+        String id = scanner.nextLine().trim();
         try {
             teacherService.delete(id);
-            logger.info("Delete functionality should be implemented in TeacherService.");
+            logger.info("Teacher deleted.");
         } catch (Exception e) {
             logger.info("Error: " + e.getMessage());
         }

@@ -277,7 +277,7 @@ public class MainMenu {
          // ДЕКАНАТ ФІ
         Teacher deanFit = new Teacher("DFIT", "Глибовець", "Андрій", "Миколайович",
                 LocalDate.of(1978, 1, 1),
-                new Email("a.glybovets@ukma.edu.ua"), new PhoneNumber("+380444636985"), // Обгортаємо в DTO
+                new Email("a.glybovets@ukma.edu.ua"), new PhoneNumber("+380444636985"),
                 "Professor", "Dr. Sc.", "Academician", LocalDate.of(1990, 9, 1), 1.0);
 
         // DEPARTMENTS
@@ -322,10 +322,11 @@ public class MainMenu {
         facultyService.addDepartment("FPN", law);
 
         // -- Студенти ФІ --
+        // Студент 1
         Student student1 = new Student(
                 "100001", "Шевченко", "Іван", "Петрович",
                 LocalDate.of(2003, 5, 10),
-                "ivanshevch@ukma.edu.ua", "+380999134159", // Обгортаємо в DTO
+                "ivanshevch@ukma.edu.ua", "+380999134159",
                 "S001", 2, "ІПЗ-2",
                 2022, StudyForm.BUDGET, StudentStatus.STUDYING
         );
@@ -340,7 +341,7 @@ public class MainMenu {
                 2022, StudyForm.BUDGET, StudentStatus.STUDYING
         );
         studentService.create(student4);
-        student1.setDepartment(informatics);
+        student4.setDepartment(informatics); // ПРАВКА: student4 замість student1
 
         Student student2 = new Student(
                 "100002", "Коваленко", "Анна", "Олегівна",
@@ -350,7 +351,7 @@ public class MainMenu {
                 2023, StudyForm.CONTRACT, StudentStatus.STUDYING
         );
         studentService.create(student2);
-        student1.setDepartment(informatics);
+        student2.setDepartment(informatics); // ПРАВКА: student2 замість student1
 
         Student student3 = new Student(
                 "140004", "Бондар", "Максим", "Ігорович",
@@ -360,35 +361,9 @@ public class MainMenu {
                 2021, StudyForm.BUDGET, StudentStatus.STUDYING
         );
         studentService.create(student3);
-        student1.setDepartment(informatics);
+        student3.setDepartment(informatics); // ПРАВКА: student3 замість student1
     }
 
-   /* private void seedFaculties(){
-        Faculty fit = new Faculty("FIT", "Faculty of IT", "FIT", null, "fit@ukma.edu.ua");
-        facultyService.create(fit);
-
-        Faculty fgn = new Faculty("FGN", "Faculty of Humanities", "FGN", null, "fgn@ukma.edu.ua");
-        facultyService.create(fgn);
-
-        Faculty fen = new Faculty("FEN", "Faculty of Economics", "FEN", null, "fen@ukma.edu.ua");
-        facultyService.create(fen);
-
-        //  Факультет правничих наук (ФПрН)
-        Faculty fpn = new Faculty("FPN", "Faculty of Law", "FPN", null, "fpn@ukma.edu.ua");
-        facultyService.create(fpn);
-
-        //  Факультет природничих наук (ФПН)
-        Faculty fpsn = new Faculty("FPSN", "Faculty of Natural Sciences", "FPSN", null, "fpsn@ukma.edu.ua");
-        facultyService.create(fpsn);
-
-        //  Факультет соціальних наук і соціальних технологій (ФСНСТ)
-        Faculty fsnst = new Faculty("FSNST", "Faculty of Social Sciences", "FSNST", null, "fsnst@ukma.edu.ua");
-        facultyService.create(fsnst);
-
-        //  Факультет охорони здоров’я, соціальної роботи та психології (ФОЗ)
-        Faculty foz = new Faculty("FOZ", "Faculty of Health Sciences", "FOZ", null, "foz@ukma.edu.ua");
-        facultyService.create(foz);
-    }*/
    private void showUsers() {
        System.out.println("\n=== USERS ===");
        for (User user : authService.getUsers().values()) {

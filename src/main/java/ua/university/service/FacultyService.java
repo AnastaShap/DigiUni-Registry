@@ -1,5 +1,6 @@
 package ua.university.service;
 
+import lombok.extern.slf4j.Slf4j;
 import ua.university.domain.Department;
 import ua.university.domain.Faculty;
 import ua.university.domain.Teacher;
@@ -9,6 +10,7 @@ import ua.university.repository.IRepository;
 
 import java.util.*;
 
+@Slf4j
 public class FacultyService {
 
     private final IRepository<Faculty, String> repository;
@@ -25,19 +27,23 @@ public class FacultyService {
     public void create(Faculty faculty) {
         Objects.requireNonNull(faculty);
         if (repository.findById(faculty.getCode()).isPresent()) {
+            log.error("Faculty {} already exists", faculty.getCode());
             throw new DuplicateEntityException("Faculty already exists: " + faculty.getCode());
         }
         repository.save(faculty);
+        log.info("Faculty created: {}", faculty.getShortName());
     }
 
     public void update(Faculty faculty) {
         Objects.requireNonNull(faculty);
         repository.save(faculty);
+        log.info("Faculty updated: {}", faculty.getCode());
     }
 
     public void delete(String code) {
         getOrThrow(code);
         repository.deleteById(code);
+        log.info("Faculty deleted: {}", code);
     }
 
     public List<Faculty> findAll() {
@@ -53,27 +59,21 @@ public class FacultyService {
     }
 
     public void addDepartment(String facultyCode, Department department) {
-        getOrThrow(facultyCode).getDepartments().add(department);
+        Faculty faculty = getOrThrow(facultyCode);
+        faculty.getDepartments().add(department);
+        department.setFaculty(faculty); // ПРАВКА: Встановлюємо зворотний зв'язок
+        log.info("Department {} linked to faculty {}", department.getCode(), facultyCode);
     }
 
     public void changeName(String facultyCode, String newName) {
-        Faculty faculty = getOrThrow(facultyCode);
-        faculty.setName(newName);
+        getOrThrow(facultyCode).setName(newName);
     }
 
     public void changeShortName(String facultyCode, String newShortName) {
-        Faculty faculty = getOrThrow(facultyCode);
-        faculty.setShortName(newShortName);
+        getOrThrow(facultyCode).setShortName(newShortName);
     }
 
     public void changeContacts(String facultyCode, String newContacts) {
-        Faculty faculty = getOrThrow(facultyCode);
-        faculty.setContacts(newContacts);
+        getOrThrow(facultyCode).setContacts(newContacts);
     }
-
-    /*
-    private Faculty getFacultyOrThrow(String code) {
-        return findByCode(code)
-                .orElseThrow(() -> new FacultyNotFoundException(code));
-    }*/
 }

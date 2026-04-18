@@ -25,26 +25,21 @@ public class FacultyCRUDMenu {
     }
 
     public void createFaculty() {
-        System.out.println("=== Create New Faculty ===");
-
-        System.out.println("Enter Faculty Code:");
+        logger.info("=== Create New Faculty ===");
+        logger.info("Enter Faculty Code:");
         String code = ConsoleInputValidator.readNonEmptyString(scanner);
-
-        System.out.println("Enter Faculty Name:");
+        logger.info("Enter Faculty Name:");
         String name = ConsoleInputValidator.readNonEmptyString(scanner);
-
-        System.out.println("Enter Faculty Short Name:");
+        logger.info("Enter Short Name:");
         String shortName = ConsoleInputValidator.readNonEmptyString(scanner);
-
-        System.out.println("Enter Faculty Email:");
+        logger.info("Enter Email:");
         String email = ConsoleInputValidator.readEmail(scanner);
 
-        // Використовуємо окремий обробник для вводу даних декана (Teacher)
         var dean = inputHandler.readDeanData();
-        Faculty faculty = new Faculty(code, name, shortName, dean, email); //
+        Faculty faculty = new Faculty(code, name, shortName, dean, email);
 
         try {
-            facultyService.create(faculty); //
+            facultyService.create(faculty);
             logger.info("Faculty created successfully.");
         } catch (Exception e) {
             logger.info("Error: " + e.getMessage());
@@ -52,7 +47,7 @@ public class FacultyCRUDMenu {
     }
 
     public void showFaculties() {
-        var faculties = facultyService.findAll(); //
+        var faculties = facultyService.findAll();
         if (faculties.isEmpty()) {
             logger.info("No faculties found.");
         } else {
