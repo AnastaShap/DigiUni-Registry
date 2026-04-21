@@ -1,4 +1,7 @@
 package ua.university.domain;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import ua.university.dto.Email;
 import ua.university.dto.PhoneNumber;
 
@@ -6,6 +9,9 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
+@AllArgsConstructor
+@Setter
+@Getter
 public abstract sealed class Person implements Serializable permits Student, Teacher{
     private String id;
     private  String lastName;
@@ -14,6 +20,8 @@ public abstract sealed class Person implements Serializable permits Student, Tea
     private LocalDate birthDate;
     private Email email;
     private PhoneNumber phone;
+    private int permissionMask;
+
 
     protected Person(String id, String lastName, String firstName, String middleName,
                      LocalDate birthDate, Email email, PhoneNumber phone) {
@@ -33,17 +41,17 @@ public abstract sealed class Person implements Serializable permits Student, Tea
         this.phone = phone;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
+//    public String getId() {
+//        return id;
+//    }
+//
+//    public void setId(String id) {
+//        this.id = id;
+//    }
+//
+//    public String getLastName() {
+//        return lastName;
+//    }
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
@@ -55,48 +63,57 @@ public abstract sealed class Person implements Serializable permits Student, Tea
         if (parts.length > 2) this.middleName = parts[2];
     }
 
-    public String getMiddleName() {
-        return middleName;
-    }
-
-    public void setMiddleName(String middleName) {
-        this.middleName = middleName;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public LocalDate getBirthDate() {
-        return birthDate;
-    }
-
-    public void setBirthDate(LocalDate birthDate) {
-        this.birthDate = birthDate;
-    }
-
-    public Email getEmail() {
-        return email;
-    }
-
-    public void setEmail(Email email) {
-        this.email = email;
-    }
-
-    public PhoneNumber getPhone() {
-        return phone;
-    }
-
-    public void setPhone(PhoneNumber phone) {
-        this.phone = phone;
-    }
+//    public String getMiddleName() {
+//        return middleName;
+//    }
+//
+//    public void setMiddleName(String middleName) {
+//        this.middleName = middleName;
+//    }
+//
+//    public String getFirstName() {
+//        return firstName;
+//    }
+//
+//    public void setFirstName(String firstName) {
+//        this.firstName = firstName;
+//    }
+//
+//    public LocalDate getBirthDate() {
+//        return birthDate;
+//    }
+//
+//    public void setBirthDate(LocalDate birthDate) {
+//        this.birthDate = birthDate;
+//    }
+//
+//    public Email getEmail() {
+//        return email;
+//    }
+//
+//    public void setEmail(Email email) {
+//        this.email = email;
+//    }
+//
+//    public PhoneNumber getPhone() {
+//        return phone;
+//    }
+//
+//    public void setPhone(PhoneNumber phone) {
+//        this.phone = phone;
+//    }
 
     public String getFullName() {
         return lastName + " " + firstName + " " + middleName;
+    }
+
+    // PERMISSIONS
+    public void addPermissions(int perm){
+        this.permissionMask |= perm;  // permission OR add byte
+    }
+
+    public boolean hasPermission(int perm){
+        return (this.permissionMask & perm) != 0; // AND перевіряє біт
     }
 
     @Override

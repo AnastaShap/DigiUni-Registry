@@ -1,10 +1,7 @@
 package ua.university.ui;
 
 import lombok.AllArgsConstructor;
-import ua.university.domain.Department;
-import ua.university.domain.Faculty;
-import ua.university.domain.Student;
-import ua.university.domain.Teacher;
+import ua.university.domain.*;
 import ua.university.domain.enums.Role;
 import ua.university.domain.enums.StudentStatus;
 import ua.university.domain.enums.StudyForm;
@@ -32,6 +29,7 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.Scanner;
 import java.util.Set;
+
 
 public class MainMenu {
     private final DepartmentService departmentService;
@@ -63,7 +61,6 @@ public class MainMenu {
         this.facultyService = new FacultyService(new InMemoryFacultyRepository());
         this.departmentService = new DepartmentService(new InMemoryDepartmentRepository());
 
-        // Переконайся, що ці конструктори співпадають з оголошенням у класах Menu
         this.facultyMenu = new FacultyCRUDMenu(facultyService, logger, scanner);
         this.departmentMenu = new DepartmentCRUDMenu(departmentService, facultyService, logger, scanner);
         this.studentMenu = new StudentCRUDMenu(studentService, departmentService, facultyService, logger, scanner);
@@ -126,7 +123,8 @@ public class MainMenu {
                     }
                     case 4 -> {
                         requireManager();
-                        studentMenu.deleteStudent();
+                        Person user = authService.getCurrentUser();
+                        studentMenu.deleteStudent(user);
                     }
                     case 5 -> studentMenu.searchMenu();
 
