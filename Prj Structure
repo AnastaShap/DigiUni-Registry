@@ -1,0 +1,80 @@
+DigitUni-Registry
+│
+├── pom.xml
+├── README.md
+│
+└── src
+    ├── main
+    │   ├── java
+    │   │   └── ua/edu/ukma/digiuni
+    │   │
+    │   │       ├── Main.java
+    │   │
+    │   │       ├── domain              ← предметна область (ООП)
+    │   │       │   ├── University.java
+    │   │       │   ├── Faculty.java
+    │   │       │   ├── Department.java
+    │   │       │   ├── Person.java
+    │   │       │   ├── Student.java
+    │   │       │   ├── Teacher.java
+    │   │       │   └── enums
+    │   │       │       ├── StudyForm.java
+    │   │       │       └── StudentStatus.java
+    │   │
+    │   │       ├── repository          ← зберігання даних
+    │   │       │   ├── Repository.java
+    │   │       │   ├── student
+    │   │       │   │   ├── StudentRepository.java
+    │   │       │   │   └── InMemoryStudentRepository.java
+    │   │       │   └── faculty
+    │   │       │       ├── FacultyRepository.java
+    │   │       │       └── InMemoryFacultyRepository.java
+    │   │
+    │   │       ├── service             ← бізнес-логіка
+    │   │       │   ├── StudentService.java
+    │   │       │   ├── FacultyService.java
+    │   │       │   └── DepartmentService.java
+    │   │
+    │   │       ├── ui                  ← консольний інтерфейс
+    │   │       │   ├── MainMenu.java
+    │   │       │   ├── StudentMenu.java
+    │   │       │   └── FacultyMenu.java
+    │   │
+    │   │       ├── util                ← допоміжні класи
+    │   │       │   ├── InputValidator.java
+    │   │       │   └── ConsolePrinter.java
+    │   │
+    │   │       ├── exception           ← власні винятки (пізніше)
+    │   │       │   ├── ValidationException.java
+    │   │       │   └── NotFoundException.java
+    │   │
+    │   │       ├── security            ← авторизація та ролі (пізніше)
+    │   │       │   ├── User.java
+    │   │       │   ├── Role.java
+    │   │       │   └── AuthService.java
+    │   │
+    │   │       ├── io                  ← збереження даних (checkpoint-2)
+    │   │       │   ├── DataStore.java
+    │   │       │   └── JsonDataStore.java
+    │   │
+    │   │       ├── network             ← TCP клієнт-сервер (checkpoint-3)
+    │   │       │   ├── Server.java
+    │   │       │   └── Client.java
+    │   │
+    │   │       ├── reflection          ← анотації + reflection
+    │   │       │   ├── MenuCommand.java
+    │   │       │   └── MenuProcessor.java
+    │   │
+    │   │       └── config               ← логування, конфіг
+    │   │           └── log4j2.xml
+    │   │
+    │   └── resources
+    │       └── log4j2.xml
+    │
+    └── test
+        └── java
+            └── ua/edu/ukma/digiuni
+                ├── service
+                │   └── StudentServiceTest.java
+                └── repository
+                    └── InMemoryStudentRepositoryTest.java
