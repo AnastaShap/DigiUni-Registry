@@ -1,9 +1,12 @@
-package ua.university.ui;
+package ua.university.ui.teacher;
 
 import lombok.AllArgsConstructor;
+import ua.university.domain.Person;
 import ua.university.domain.Teacher;
+import ua.university.security.AuthService;
+import ua.university.security.Permissions;
+import ua.university.security.RequiresPermission;
 import ua.university.service.TeacherService;
-import ua.university.ui.teacher.TeacherInputHandler;
 import ua.university.util.ConsoleInputValidator;
 import ua.university.util.Logging.ILogger;
 import ua.university.util.TeacherConsoleView;
@@ -12,15 +15,38 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
 
-@AllArgsConstructor
 public class TeacherCRUDMenu {
     private final TeacherService teacherService;
     private final ILogger logger;
     private final Scanner scanner;
+    private final AuthService authService;
+
+    // Ці поля краще ініціалізувати всередині, щоб не "засмічувати" MainMenu
     private final TeacherConsoleView view;
     private final TeacherInputHandler inputHandler;
 
+    public TeacherCRUDMenu(TeacherService teacherService,
+                           ILogger logger,
+                           Scanner scanner,
+                           AuthService authService) {
+        this.teacherService = teacherService;
+        this.logger = logger;
+        this.scanner = scanner;
+        this.authService = authService;
+
+        // Створюємо внутрішні залежності тут
+        this.view = new TeacherConsoleView();
+        this.inputHandler = new TeacherInputHandler(scanner);
+    }
+
+    @RequiresPermission(Permissions.EDIT_DATA)
     public void createTeacher() {
+        Person currentUser = authService.getCurrentUser();
+        if (!authService.canExecute(this, "createTeacher", currentUser)) {
+            logger.info("Access Denied.");
+            return;
+        }
+
         logger.info("=== Create New Teacher ===");
 
         String id = ConsoleInputValidator.readNumericId(scanner);
@@ -61,10 +87,13 @@ public class TeacherCRUDMenu {
             logger.info("No teachers found.");
             return;
         }
-        view.printList(teachers); // Використовуємо в’юшку для красивого виводу
+        view.printList(teachers);
     }
 
+    @RequiresPermission(Permissions.DELETE_DATA)
     public void deleteTeacher() {
+        if (!authService.checkAccess(this, "deleteStudent", logger)) return;
+
         logger.info("Enter Teacher ID to delete:");
         String id = scanner.nextLine().trim();
         try {
