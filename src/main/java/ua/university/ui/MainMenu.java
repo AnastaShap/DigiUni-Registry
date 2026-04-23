@@ -1,6 +1,5 @@
 package ua.university.ui;
 
-import lombok.AllArgsConstructor;
 import ua.university.domain.*;
 import ua.university.domain.enums.Role;
 import ua.university.domain.enums.StudentStatus;
@@ -10,9 +9,9 @@ import ua.university.dto.PhoneNumber;
 import ua.university.exception.AccessDeniedException;
 import ua.university.io.DataStorageService;
 import ua.university.io.UniversityDataSnapshot;
-import ua.university.repository.IRepository;
 import ua.university.repository.InMemoryDepartmentRepository;
 import ua.university.repository.InMemoryFacultyRepository;
+import ua.university.repository.InMemoryTeacherRepository;
 import ua.university.repository.student.InMemoryStudentRepository;
 import ua.university.security.AccessManager;
 import ua.university.security.AuthService;
@@ -20,8 +19,11 @@ import ua.university.security.User;
 import ua.university.service.DepartmentService;
 import ua.university.service.FacultyService;
 import ua.university.service.StudentService;
+import ua.university.service.TeacherService;
 import ua.university.service.multithreading.AutoSaveService;
+import ua.university.ui.faculty.FacultyCRUDMenu;
 import ua.university.ui.student.StudentCRUDMenu;
+import ua.university.ui.teacher.TeacherCRUDMenu;
 import ua.university.util.ConsoleInputValidator;
 import ua.university.util.Logging.ILogger;
 
@@ -35,10 +37,12 @@ public class MainMenu {
     private final DepartmentService departmentService;
     private final FacultyService facultyService;
     private final StudentService studentService;
+    private final TeacherService teacherService;
 
     private final StudentCRUDMenu studentMenu;
     private final FacultyCRUDMenu facultyMenu;
     private final DepartmentCRUDMenu departmentMenu;
+    private final TeacherCRUDMenu teacherMenu;
     private final Scanner scanner;
     private final AuthService authService;
     private final AccessManager accessManager;
@@ -48,8 +52,10 @@ public class MainMenu {
     private final Path dataFile;
 
     private final AutoSaveService autoSaveService;
+    private final AuthService auth;
 
     public MainMenu(ILogger logger) {
+        this.auth = new AuthService();
         this.dataStorageService = new DataStorageService();
         this.dataFile = Path.of("data", "university-data.bin");
         this.scanner = new Scanner(System.in);
@@ -60,10 +66,13 @@ public class MainMenu {
         this.studentService = new StudentService(new InMemoryStudentRepository());
         this.facultyService = new FacultyService(new InMemoryFacultyRepository());
         this.departmentService = new DepartmentService(new InMemoryDepartmentRepository());
+        this.teacherService = new TeacherService(new InMemoryTeacherRepository());
 
-        this.facultyMenu = new FacultyCRUDMenu(facultyService, logger, scanner);
-        this.departmentMenu = new DepartmentCRUDMenu(departmentService, facultyService, logger, scanner);
+
+        this.facultyMenu = new FacultyCRUDMenu(facultyService, logger, scanner, auth);
+        this.departmentMenu = new DepartmentCRUDMenu(departmentService, facultyService, logger, scanner, auth);
         this.studentMenu = new StudentCRUDMenu(studentService, departmentService, facultyService, logger, scanner);
+        this.teacherMenu = new TeacherCRUDMenu(teacherService, logger, scanner, auth);
 
         this.autoSaveService = new AutoSaveService(
                 this.dataStorageService,
@@ -174,6 +183,16 @@ public class MainMenu {
                         requireAdmin();
                         blockOrUnblockUser();
                     }
+                    case 19 -> {
+                        requireManager();
+                        teacherMenu.createTeacher();
+                    }
+                    case 20 -> teacherMenu.showTeachers();
+                    case 21 -> {
+                        requireManager();
+                        teacherMenu.deleteTeacher();
+                    }
+
 
                     case 0 -> {
                         autoSaveService.stop(); // Зупиняємо фоновий потік
@@ -244,6 +263,10 @@ public class MainMenu {
         System.out.println("16 - Create user (admin)");
         System.out.println("17 - Change user role (admin)");
         System.out.println("18 - Block/Unblock user (admin)");
+
+        System.out.println("19 - Add Teacher (manager/admin)");
+        System.out.println("20 - List Teachers");
+        System.out.println("21 - Delete Teacher (manager/admin)");
 
         System.out.println("0 - Exit");
     }
