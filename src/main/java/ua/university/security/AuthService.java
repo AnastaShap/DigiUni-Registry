@@ -2,6 +2,7 @@ package ua.university.security;
 
 import ua.university.domain.Person;
 import ua.university.domain.enums.Role;
+import ua.university.util.Logging.ILogger;
 
 import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
@@ -92,6 +93,26 @@ public class AuthService {
            // return e.getMessage();
             return false;
 
+        }
+        return true;
+    }
+
+    public void assignPermissions(Person person, Role role) {
+        int mask = switch (role) {
+            case ADMIN -> Permissions.ADMIN_FULL | Permissions.DELETE_DATA | Permissions.EDIT_DATA | Permissions.VIEW_ALL;
+            case MANAGER -> Permissions.EDIT_DATA | Permissions.VIEW_ALL;
+            case USER -> Permissions.VIEW_ALL;
+            default -> 0;
+        };
+        person.addPermissions(mask);
+    }
+
+
+    public boolean checkAccess(Object menu, String methodName, ILogger logger) {
+        Person user = getCurrentUser();
+        if (!canExecute(menu, methodName, user)) {
+            logger.info("Access Denied: You don't have the required permission for " + methodName);
+            return false;
         }
         return true;
     }
