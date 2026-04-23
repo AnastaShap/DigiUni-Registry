@@ -131,10 +131,7 @@ public class StudentCRUDMenu {
     public void deleteStudent(Person currentUser) {
          //user = authService.getCurrentUser();
         // reflections usage
-        if (!authService.canExecute(this, "deleteStudent", currentUser)) {
-            logger.info("Access Denied: You don't have DELETE_DATA permission.");
-            return;
-        }
+        if (!authService.checkAccess(this, "deleteStudent", logger)) return;
 
         view.printMessage("Enter System ID to delete:");
         String id = scanner.nextLine().trim();
@@ -146,6 +143,7 @@ public class StudentCRUDMenu {
         }
     }
 
+    @RequiresPermission(Permissions.EDIT_DATA)
     public void updateStudent() {
         view.printMessage("Enter System ID to update:");
         String id = scanner.nextLine().trim();

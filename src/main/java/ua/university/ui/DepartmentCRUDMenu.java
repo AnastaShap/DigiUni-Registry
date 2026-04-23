@@ -2,6 +2,9 @@ package ua.university.ui;
 
 import ua.university.domain.Department;
 import ua.university.domain.Faculty;
+import ua.university.security.AuthService;
+import ua.university.security.Permissions;
+import ua.university.security.RequiresPermission;
 import ua.university.service.DepartmentService;
 import ua.university.service.FacultyService;
 import ua.university.util.ConsoleInputValidator;
@@ -16,15 +19,17 @@ public class DepartmentCRUDMenu {
     private final FacultyService facultyService;
     private final ILogger logger;
     private final Scanner scanner;
-    //private final StudentConsoleView view = new StudentConsoleView();
+    private final AuthService authService;
 
-    public DepartmentCRUDMenu(DepartmentService departmentService, FacultyService facultyService, ILogger logger, Scanner scanner) {
+    public DepartmentCRUDMenu(DepartmentService departmentService, FacultyService facultyService, ILogger logger, Scanner scanner, AuthService authService) {
         this.departmentService = departmentService;
         this.facultyService = facultyService;
         this.logger = logger;
         this.scanner = scanner;
+        this.authService = authService;
     }
 
+    @RequiresPermission(Permissions.ADMIN_FULL)
     public void createDepartment() {
         logger.info("=== Create New Department ===");
 
@@ -74,6 +79,8 @@ public class DepartmentCRUDMenu {
     }
 
     public void deleteDepartment() {
+        if (!authService.checkAccess(this, "deleteStudent", logger)) return;
+
         showDepartments();
         logger.info("Enter Department Code to delete:");
         String code = ConsoleInputValidator.readNonEmptyString(scanner);
