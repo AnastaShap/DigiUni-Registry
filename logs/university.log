@@ -45,3 +45,99 @@
 2026-04-08 11:12:42 [main] INFO  ua.university.service.FacultyService - Faculty created: FPN
 2026-04-08 11:12:42 [main] INFO  ua.university.service.FacultyService - Faculty created: FGN
 2026-04-08 11:12:42 [main] INFO  ua.university.service.FacultyService - Faculty created: FEN
+2026-04-09 13:50:40 [main] INFO  ua.university.io.DataStorageService - Data successfully loaded from: data\university-data.bin
+2026-04-09 13:50:40 [main] INFO  ua.university.service.FacultyService - Faculty created: FIT
+2026-04-09 13:50:40 [main] INFO  ua.university.service.FacultyService - Faculty created: FOZ
+2026-04-09 13:50:40 [main] INFO  ua.university.service.FacultyService - Faculty created: FSNST
+2026-04-09 13:50:40 [main] INFO  ua.university.service.FacultyService - Faculty created: FPSN
+2026-04-09 13:50:40 [main] INFO  ua.university.service.FacultyService - Faculty created: FPN
+2026-04-09 13:50:40 [main] INFO  ua.university.service.FacultyService - Faculty created: FGN
+2026-04-09 13:50:40 [main] INFO  ua.university.service.FacultyService - Faculty created: FEN
+2026-04-18 18:19:11 [main] ERROR ua.university.io.DataStorageService - Error loading data from data\university-data.bin: ua.university.domain.Teacher; local class incompatible: stream classdesc serialVersionUID = 6510782514471632610, local class serialVersionUID = -4319365925837625048
+2026-04-18 18:19:11 [main] INFO  ua.university.service.FacultyService - Faculty created: FIT
+2026-04-18 18:19:11 [main] INFO  ua.university.service.FacultyService - Faculty created: FGN
+2026-04-18 18:19:11 [main] INFO  ua.university.service.FacultyService - Faculty created: FEN
+2026-04-18 18:19:11 [main] INFO  ua.university.service.FacultyService - Faculty created: FPN
+2026-04-18 18:19:11 [main] INFO  ua.university.service.FacultyService - Faculty created: FPSN
+2026-04-18 18:19:11 [main] INFO  ua.university.service.FacultyService - Faculty created: FSNST
+2026-04-18 18:19:11 [main] INFO  ua.university.service.FacultyService - Faculty created: FOZ
+2026-04-18 18:19:11 [main] INFO  ua.university.service.FacultyService - Department INF linked to faculty FIT
+2026-04-18 18:19:11 [main] INFO  ua.university.service.FacultyService - Department MATH linked to faculty FIT
+2026-04-18 18:19:11 [main] INFO  ua.university.service.FacultyService - Department NT linked to faculty FIT
+2026-04-18 18:19:11 [main] INFO  ua.university.service.FacultyService - Department FIN linked to faculty FEN
+2026-04-18 18:19:11 [main] INFO  ua.university.service.FacultyService - Department MKT linked to faculty FEN
+2026-04-18 18:19:11 [main] INFO  ua.university.service.FacultyService - Department ECON linked to faculty FEN
+2026-04-18 18:19:11 [main] INFO  ua.university.service.FacultyService - Department HIST linked to faculty FGN
+2026-04-18 18:19:11 [main] INFO  ua.university.service.FacultyService - Department PHIL linked to faculty FGN
+2026-04-18 18:19:11 [main] INFO  ua.university.service.FacultyService - Department LAW linked to faculty FPN
+2026-04-18 18:20:16 [main] ERROR ua.university.io.DataStorageService - Error loading data from data\university-data.bin: ua.university.domain.Teacher; local class incompatible: stream classdesc serialVersionUID = 6510782514471632610, local class serialVersionUID = -4319365925837625048
+2026-04-18 18:20:16 [main] INFO  ua.university.service.FacultyService - Faculty created: FIT
+2026-04-18 18:20:16 [main] INFO  ua.university.service.FacultyService - Faculty created: FGN
+2026-04-18 18:20:16 [main] INFO  ua.university.service.FacultyService - Faculty created: FEN
+2026-04-18 18:20:16 [main] INFO  ua.university.service.FacultyService - Faculty created: FPN
+2026-04-18 18:20:16 [main] INFO  ua.university.service.FacultyService - Faculty created: FPSN
+2026-04-18 18:20:16 [main] INFO  ua.university.service.FacultyService - Faculty created: FSNST
+2026-04-18 18:20:16 [main] INFO  ua.university.service.FacultyService - Faculty created: FOZ
+2026-04-18 18:20:16 [main] INFO  ua.university.service.FacultyService - Department INF linked to faculty FIT
+2026-04-18 18:20:16 [main] INFO  ua.university.service.FacultyService - Department MATH linked to faculty FIT
+2026-04-18 18:20:16 [main] INFO  ua.university.service.FacultyService - Department NT linked to faculty FIT
+2026-04-18 18:20:16 [main] INFO  ua.university.service.FacultyService - Department FIN linked to faculty FEN
+2026-04-18 18:20:16 [main] INFO  ua.university.service.FacultyService - Department MKT linked to faculty FEN
+2026-04-18 18:20:16 [main] INFO  ua.university.service.FacultyService - Department ECON linked to faculty FEN
+2026-04-18 18:20:16 [main] INFO  ua.university.service.FacultyService - Department HIST linked to faculty FGN
+2026-04-18 18:20:16 [main] INFO  ua.university.service.FacultyService - Department PHIL linked to faculty FGN
+2026-04-18 18:20:16 [main] INFO  ua.university.service.FacultyService - Department LAW linked to faculty FPN
+2026-04-18 18:20:16 [main] INFO  ua.university.service.DepartmentService - Student 100001 added to department INF
+2026-04-18 18:20:16 [main] INFO  ua.university.service.DepartmentService - Student 1000004 added to department INF
+2026-04-18 18:20:16 [main] INFO  ua.university.service.DepartmentService - Student 100002 added to department INF
+2026-04-18 18:20:16 [main] INFO  ua.university.service.DepartmentService - Student 140004 added to department INF
+2026-04-18 18:21:16 [Thread-0] INFO  ua.university.io.DataStorageService - Data successfully saved to: data\university-data.bin
+2026-04-18 18:22:16 [Thread-0] INFO  ua.university.io.DataStorageService - Data successfully saved to: data\university-data.bin
+2026-04-18 18:23:16 [Thread-0] INFO  ua.university.io.DataStorageService - Data successfully saved to: data\university-data.bin
+2026-04-18 18:24:16 [Thread-0] INFO  ua.university.io.DataStorageService - Data successfully saved to: data\university-data.bin
+2026-04-18 18:25:16 [Thread-0] INFO  ua.university.io.DataStorageService - Data successfully saved to: data\university-data.bin
+2026-04-18 18:26:16 [Thread-0] INFO  ua.university.io.DataStorageService - Data successfully saved to: data\university-data.bin
+2026-04-18 18:27:16 [Thread-0] INFO  ua.university.io.DataStorageService - Data successfully saved to: data\university-data.bin
+2026-04-18 18:28:16 [Thread-0] INFO  ua.university.io.DataStorageService - Data successfully saved to: data\university-data.bin
+2026-04-18 18:29:03 [main] INFO  ua.university.io.DataStorageService - Data successfully loaded from: data\university-data.bin
+2026-04-18 18:29:03 [main] INFO  ua.university.service.FacultyService - Faculty updated: FIT
+2026-04-18 18:29:03 [main] INFO  ua.university.service.FacultyService - Faculty updated: FOZ
+2026-04-18 18:29:03 [main] INFO  ua.university.service.FacultyService - Faculty updated: FSNST
+2026-04-18 18:29:03 [main] INFO  ua.university.service.FacultyService - Faculty updated: FPSN
+2026-04-18 18:29:03 [main] INFO  ua.university.service.FacultyService - Faculty updated: FPN
+2026-04-18 18:29:03 [main] INFO  ua.university.service.FacultyService - Faculty updated: FGN
+2026-04-18 18:29:03 [main] INFO  ua.university.service.FacultyService - Faculty updated: FEN
+2026-04-18 18:29:03 [main] INFO  ua.university.service.DepartmentService - Department updated: INF
+2026-04-18 18:29:03 [main] INFO  ua.university.service.DepartmentService - Department updated: HIST
+2026-04-18 18:29:03 [main] INFO  ua.university.service.DepartmentService - Department updated: LAW
+2026-04-18 18:29:03 [main] INFO  ua.university.service.DepartmentService - Department updated: NT
+2026-04-18 18:29:03 [main] INFO  ua.university.service.DepartmentService - Department updated: MKT
+2026-04-18 18:29:03 [main] INFO  ua.university.service.DepartmentService - Department updated: FIN
+2026-04-18 18:29:03 [main] INFO  ua.university.service.DepartmentService - Department updated: MATH
+2026-04-18 18:29:03 [main] INFO  ua.university.service.DepartmentService - Department updated: ECON
+2026-04-18 18:29:03 [main] INFO  ua.university.service.DepartmentService - Department updated: PHIL
+2026-04-18 18:29:21 [main] INFO  ua.university.service.FacultyService - Faculty created: FIT
+2026-04-18 18:29:21 [main] ERROR ua.university.service.FacultyService - Faculty FIT already exists
+2026-04-18 18:29:28 [main] INFO  ua.university.service.FacultyService - Faculty created: FIT
+2026-04-18 18:29:28 [main] ERROR ua.university.service.FacultyService - Faculty FIT already exists
+2026-04-21 14:17:15 [main] ERROR ua.university.io.DataStorageService - Error loading data from data\university-data.bin: ua.university.domain.Person; local class incompatible: stream classdesc serialVersionUID = -3755908124132778608, local class serialVersionUID = 895814927050936435
+2026-04-21 14:17:15 [main] INFO  ua.university.service.FacultyService - Faculty created: FIT
+2026-04-21 14:17:15 [main] INFO  ua.university.service.FacultyService - Faculty created: FGN
+2026-04-21 14:17:15 [main] INFO  ua.university.service.FacultyService - Faculty created: FEN
+2026-04-21 14:17:15 [main] INFO  ua.university.service.FacultyService - Faculty created: FPN
+2026-04-21 14:17:15 [main] INFO  ua.university.service.FacultyService - Faculty created: FPSN
+2026-04-21 14:17:15 [main] INFO  ua.university.service.FacultyService - Faculty created: FSNST
+2026-04-21 14:17:15 [main] INFO  ua.university.service.FacultyService - Faculty created: FOZ
+2026-04-21 14:17:15 [main] INFO  ua.university.service.FacultyService - Department INF linked to faculty FIT
+2026-04-21 14:17:15 [main] INFO  ua.university.service.FacultyService - Department MATH linked to faculty FIT
+2026-04-21 14:17:15 [main] INFO  ua.university.service.FacultyService - Department NT linked to faculty FIT
+2026-04-21 14:17:15 [main] INFO  ua.university.service.FacultyService - Department FIN linked to faculty FEN
+2026-04-21 14:17:15 [main] INFO  ua.university.service.FacultyService - Department MKT linked to faculty FEN
+2026-04-21 14:17:15 [main] INFO  ua.university.service.FacultyService - Department ECON linked to faculty FEN
+2026-04-21 14:17:15 [main] INFO  ua.university.service.FacultyService - Department HIST linked to faculty FGN
+2026-04-21 14:17:15 [main] INFO  ua.university.service.FacultyService - Department PHIL linked to faculty FGN
+2026-04-21 14:17:15 [main] INFO  ua.university.service.FacultyService - Department LAW linked to faculty FPN
+2026-04-21 14:17:16 [main] INFO  ua.university.service.DepartmentService - Student 100001 added to department INF
+2026-04-21 14:17:16 [main] INFO  ua.university.service.DepartmentService - Student 1000004 added to department INF
+2026-04-21 14:17:16 [main] INFO  ua.university.service.DepartmentService - Student 100002 added to department INF
+2026-04-21 14:17:16 [main] INFO  ua.university.service.DepartmentService - Student 140004 added to department INF

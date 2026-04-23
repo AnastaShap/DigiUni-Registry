@@ -1,8 +1,10 @@
-package ua.university.ui;
+package ua.university.ui.faculty;
 
 import ua.university.domain.Faculty;
+import ua.university.security.AuthService;
+import ua.university.security.Permissions;
+import ua.university.security.RequiresPermission;
 import ua.university.service.FacultyService;
-import ua.university.ui.faculty.FacultyInputHandler;
 import ua.university.util.ConsoleInputValidator;
 import ua.university.util.FacultyConsoleView;
 import ua.university.util.Logging.ILogger;
@@ -15,11 +17,13 @@ public class FacultyCRUDMenu {
     private final Scanner scanner;
     private final FacultyConsoleView view;
     private final FacultyInputHandler inputHandler;
+    private final AuthService authService;
 
-    public FacultyCRUDMenu(FacultyService facultyService, ILogger logger, Scanner scanner) {
+    public FacultyCRUDMenu(FacultyService facultyService, ILogger logger, Scanner scanner, AuthService authService) {
         this.facultyService = facultyService;
         this.logger = logger;
         this.scanner = scanner;
+        this.authService = authService;
         this.view = new FacultyConsoleView();
         this.inputHandler = new FacultyInputHandler(scanner);
     }
@@ -55,7 +59,9 @@ public class FacultyCRUDMenu {
         }
     }
 
+    @RequiresPermission(Permissions.DELETE_DATA)
     public void deleteFaculty() {
+        if (!authService.checkAccess(this, "deleteFaculty", logger)) return;
         System.out.println("Enter Faculty Code to delete:");
         String code = ConsoleInputValidator.readNonEmptyString(scanner);
 

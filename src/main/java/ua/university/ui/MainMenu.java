@@ -1,10 +1,6 @@
 package ua.university.ui;
 
-import lombok.AllArgsConstructor;
-import ua.university.domain.Department;
-import ua.university.domain.Faculty;
-import ua.university.domain.Student;
-import ua.university.domain.Teacher;
+import ua.university.domain.*;
 import ua.university.domain.enums.Role;
 import ua.university.domain.enums.StudentStatus;
 import ua.university.domain.enums.StudyForm;
@@ -13,9 +9,9 @@ import ua.university.dto.PhoneNumber;
 import ua.university.exception.AccessDeniedException;
 import ua.university.io.DataStorageService;
 import ua.university.io.UniversityDataSnapshot;
-import ua.university.repository.IRepository;
 import ua.university.repository.InMemoryDepartmentRepository;
 import ua.university.repository.InMemoryFacultyRepository;
+import ua.university.repository.InMemoryTeacherRepository;
 import ua.university.repository.student.InMemoryStudentRepository;
 import ua.university.security.AccessManager;
 import ua.university.security.AuthService;
@@ -23,7 +19,11 @@ import ua.university.security.User;
 import ua.university.service.DepartmentService;
 import ua.university.service.FacultyService;
 import ua.university.service.StudentService;
+import ua.university.service.TeacherService;
+import ua.university.service.multithreading.AutoSaveService;
+import ua.university.ui.faculty.FacultyCRUDMenu;
 import ua.university.ui.student.StudentCRUDMenu;
+import ua.university.ui.teacher.TeacherCRUDMenu;
 import ua.university.util.ConsoleInputValidator;
 import ua.university.util.Logging.ILogger;
 
@@ -32,15 +32,17 @@ import java.time.LocalDate;
 import java.util.Scanner;
 import java.util.Set;
 
-@AllArgsConstructor
+
 public class MainMenu {
     private final DepartmentService departmentService;
     private final FacultyService facultyService;
     private final StudentService studentService;
+    private final TeacherService teacherService;
 
     private final StudentCRUDMenu studentMenu;
     private final FacultyCRUDMenu facultyMenu;
     private final DepartmentCRUDMenu departmentMenu;
+    private final TeacherCRUDMenu teacherMenu;
     private final Scanner scanner;
     private final AuthService authService;
     private final AccessManager accessManager;
@@ -49,46 +51,55 @@ public class MainMenu {
     private final DataStorageService dataStorageService;
     private final Path dataFile;
 
+    private final AutoSaveService autoSaveService;
+    private final AuthService auth;
+
     public MainMenu(ILogger logger) {
+        this.auth = new AuthService();
         this.dataStorageService = new DataStorageService();
         this.dataFile = Path.of("data", "university-data.bin");
         this.scanner = new Scanner(System.in);
         this.authService = new AuthService();
         this.accessManager = new AccessManager();
 
-        InMemoryStudentRepository repo = new InMemoryStudentRepository();
-        this.studentService = new StudentService(repo);
+        // Ініціалізація репозиторіїв та сервісів
+        this.studentService = new StudentService(new InMemoryStudentRepository());
+        this.facultyService = new FacultyService(new InMemoryFacultyRepository());
+        this.departmentService = new DepartmentService(new InMemoryDepartmentRepository());
+        this.teacherService = new TeacherService(new InMemoryTeacherRepository());
 
-        IRepository<Faculty, String> faculRepo = new InMemoryFacultyRepository();
-        this.facultyService = new FacultyService(faculRepo);
 
-        IRepository<Department, String> depRepo = new InMemoryDepartmentRepository();
-        this.departmentService = new DepartmentService(depRepo);
-
-        // Прибираємо studentService, бо FacultyCRUDMenu тепер сам знає, як малювати деталі
-        this.facultyMenu = new FacultyCRUDMenu(facultyService, logger, scanner);
-        this.departmentMenu = new DepartmentCRUDMenu(departmentService, facultyService, logger, scanner);
-        // прибрати studentService, бо FacultyCRUDMenu тепер сам знає, як малювати деталі
+        this.facultyMenu = new FacultyCRUDMenu(facultyService, logger, scanner, auth);
+        this.departmentMenu = new DepartmentCRUDMenu(departmentService, facultyService, logger, scanner, auth);
         this.studentMenu = new StudentCRUDMenu(studentService, departmentService, facultyService, logger, scanner);
+        this.teacherMenu = new TeacherCRUDMenu(teacherService, logger, scanner, auth);
+
+        this.autoSaveService = new AutoSaveService(
+                this.dataStorageService,
+                this.dataFile,
+                this.facultyService,
+                this.departmentService,
+                this.studentService,
+                logger
+        );
 
         loadOrSeedData();
+        this.autoSaveService.startAutoSave(60);
     }
+
     private void loadOrSeedData() {
         if (dataStorageService.exists(dataFile)) {
             UniversityDataSnapshot snapshot = dataStorageService.load(dataFile);
-
             if (snapshot != null) {
-                snapshot.faculties().forEach(facultyService::create);
-                snapshot.departments().forEach(departmentService::create);
-                snapshot.students().forEach(studentService::create);
-                System.out.println("\n" +
-                        "Data loaded from a file.");
+                // Використовуємо update, щоб не було DuplicateEntityException
+                snapshot.faculties().forEach(facultyService::update);
+                snapshot.departments().forEach(departmentService::update);
+                snapshot.students().forEach(studentService::update);
+                System.out.println("Data loaded from file.");
                 return;
             }
         }
-
         seedData();
-        saveData();
     }
     private void saveData() {
         UniversityDataSnapshot snapshot = new UniversityDataSnapshot(
@@ -121,7 +132,8 @@ public class MainMenu {
                     }
                     case 4 -> {
                         requireManager();
-                        studentMenu.deleteStudent();
+                        Person user = authService.getCurrentUser();
+                        studentMenu.deleteStudent(user);
                     }
                     case 5 -> studentMenu.searchMenu();
 
@@ -171,9 +183,20 @@ public class MainMenu {
                         requireAdmin();
                         blockOrUnblockUser();
                     }
+                    case 19 -> {
+                        requireManager();
+                        teacherMenu.createTeacher();
+                    }
+                    case 20 -> teacherMenu.showTeachers();
+                    case 21 -> {
+                        requireManager();
+                        teacherMenu.deleteTeacher();
+                    }
+
 
                     case 0 -> {
-                        saveData();
+                        autoSaveService.stop(); // Зупиняємо фоновий потік
+                        saveData();             // Фінальне збереження перед виходом
                         return;
                     }
                 }
@@ -240,6 +263,10 @@ public class MainMenu {
         System.out.println("16 - Create user (admin)");
         System.out.println("17 - Change user role (admin)");
         System.out.println("18 - Block/Unblock user (admin)");
+
+        System.out.println("19 - Add Teacher (manager/admin)");
+        System.out.println("20 - List Teachers");
+        System.out.println("21 - Delete Teacher (manager/admin)");
 
         System.out.println("0 - Exit");
     }
@@ -321,6 +348,7 @@ public class MainMenu {
         departmentService.create(law);
         facultyService.addDepartment("FPN", law);
 
+
         // -- Студенти ФІ --
         // Студент 1
         Student student1 = new Student(
@@ -331,7 +359,6 @@ public class MainMenu {
                 2022, StudyForm.BUDGET, StudentStatus.STUDYING
         );
         studentService.create(student1);
-        student1.setDepartment(informatics);
 
         Student student4 = new Student(
                 "1000004", "Ткач", "Олексій", "Олександрович",
@@ -341,7 +368,6 @@ public class MainMenu {
                 2022, StudyForm.BUDGET, StudentStatus.STUDYING
         );
         studentService.create(student4);
-        student4.setDepartment(informatics); // ПРАВКА: student4 замість student1
 
         Student student2 = new Student(
                 "100002", "Коваленко", "Анна", "Олегівна",
@@ -351,7 +377,6 @@ public class MainMenu {
                 2023, StudyForm.CONTRACT, StudentStatus.STUDYING
         );
         studentService.create(student2);
-        student2.setDepartment(informatics); // ПРАВКА: student2 замість student1
 
         Student student3 = new Student(
                 "140004", "Бондар", "Максим", "Ігорович",
@@ -361,7 +386,18 @@ public class MainMenu {
                 2021, StudyForm.BUDGET, StudentStatus.STUDYING
         );
         studentService.create(student3);
-        student3.setDepartment(informatics); // ПРАВКА: student3 замість student1
+
+
+        // Замість student1.setDepartment(informatics);
+        departmentService.addStudent("INF", student1);
+        // Замість student4.setDepartment(informatics);
+        departmentService.addStudent("INF", student4);
+
+        // Замість student2.setDepartment(informatics);
+        departmentService.addStudent("INF", student2);
+
+     // Замість student3.setDepartment(informatics);
+        departmentService.addStudent("INF", student3);
     }
 
    private void showUsers() {

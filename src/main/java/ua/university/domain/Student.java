@@ -72,6 +72,7 @@ public final class Student extends Person implements Serializable { //
         return getBirthDate() != null && getBirthDate().isBefore(LocalDate.now().minusYears(18));
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
