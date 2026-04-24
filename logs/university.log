@@ -242,3 +242,158 @@
 2026-04-23 18:22:26 [main] INFO  ua.university.service.FacultyService - Faculty created: FIT
 2026-04-23 18:22:26 [main] ERROR ua.university.service.FacultyService - Faculty FIT already exists
 2026-04-23 18:22:26 [main] INFO  ua.university.service.DepartmentService - Student 101 added to department INF
+2026-04-24 08:42:53 [main] ERROR ua.university.io.DataStorageService - Error loading data from data\university-data.bin: ua.university.domain.Person; local class incompatible: stream classdesc serialVersionUID = -3755908124132778608, local class serialVersionUID = 895814927050936435
+2026-04-24 08:42:53 [main] INFO  ua.university.service.FacultyService - Faculty created: FIT
+2026-04-24 08:42:53 [main] INFO  ua.university.service.FacultyService - Faculty created: FGN
+2026-04-24 08:42:53 [main] INFO  ua.university.service.FacultyService - Faculty created: FEN
+2026-04-24 08:42:53 [main] INFO  ua.university.service.FacultyService - Faculty created: FPN
+2026-04-24 08:42:53 [main] INFO  ua.university.service.FacultyService - Faculty created: FPSN
+2026-04-24 08:42:53 [main] INFO  ua.university.service.FacultyService - Faculty created: FSNST
+2026-04-24 08:42:53 [main] INFO  ua.university.service.FacultyService - Faculty created: FOZ
+2026-04-24 08:42:53 [main] INFO  ua.university.service.FacultyService - Department INF linked to faculty FIT
+2026-04-24 08:42:53 [main] INFO  ua.university.service.FacultyService - Department MATH linked to faculty FIT
+2026-04-24 08:42:53 [main] INFO  ua.university.service.FacultyService - Department NT linked to faculty FIT
+2026-04-24 08:42:53 [main] INFO  ua.university.service.FacultyService - Department FIN linked to faculty FEN
+2026-04-24 08:42:53 [main] INFO  ua.university.service.FacultyService - Department MKT linked to faculty FEN
+2026-04-24 08:42:53 [main] INFO  ua.university.service.FacultyService - Department ECON linked to faculty FEN
+2026-04-24 08:42:53 [main] INFO  ua.university.service.FacultyService - Department HIST linked to faculty FGN
+2026-04-24 08:42:53 [main] INFO  ua.university.service.FacultyService - Department PHIL linked to faculty FGN
+2026-04-24 08:42:53 [main] INFO  ua.university.service.FacultyService - Department LAW linked to faculty FPN
+2026-04-24 08:42:53 [main] INFO  ua.university.service.DepartmentService - Student 100001 added to department INF
+2026-04-24 08:42:53 [main] INFO  ua.university.service.DepartmentService - Student 1000004 added to department INF
+2026-04-24 08:42:53 [main] INFO  ua.university.service.DepartmentService - Student 100002 added to department INF
+2026-04-24 08:42:53 [main] INFO  ua.university.service.DepartmentService - Student 140004 added to department INF
+2026-04-24 08:43:53 [Thread-0] INFO  ua.university.io.DataStorageService - Data successfully saved to: data\university-data.bin
+2026-04-24 08:45:25 [main] INFO  ua.university.io.DataStorageService - Data successfully loaded from: data\university-data.bin
+2026-04-24 08:45:25 [main] INFO  ua.university.service.FacultyService - Faculty updated: FIT
+2026-04-24 08:45:25 [main] INFO  ua.university.service.FacultyService - Faculty updated: FOZ
+2026-04-24 08:45:25 [main] INFO  ua.university.service.FacultyService - Faculty updated: FSNST
+2026-04-24 08:45:25 [main] INFO  ua.university.service.FacultyService - Faculty updated: FPSN
+2026-04-24 08:45:25 [main] INFO  ua.university.service.FacultyService - Faculty updated: FPN
+2026-04-24 08:45:25 [main] INFO  ua.university.service.FacultyService - Faculty updated: FGN
+2026-04-24 08:45:25 [main] INFO  ua.university.service.FacultyService - Faculty updated: FEN
+2026-04-24 08:45:25 [main] INFO  ua.university.service.DepartmentService - Department updated: INF
+2026-04-24 08:45:25 [main] INFO  ua.university.service.DepartmentService - Department updated: HIST
+2026-04-24 08:45:25 [main] INFO  ua.university.service.DepartmentService - Department updated: LAW
+2026-04-24 08:45:25 [main] INFO  ua.university.service.DepartmentService - Department updated: NT
+2026-04-24 08:45:25 [main] INFO  ua.university.service.DepartmentService - Department updated: MKT
+2026-04-24 08:45:25 [main] INFO  ua.university.service.DepartmentService - Department updated: FIN
+2026-04-24 08:45:25 [main] INFO  ua.university.service.DepartmentService - Department updated: MATH
+2026-04-24 08:45:25 [main] INFO  ua.university.service.DepartmentService - Department updated: ECON
+2026-04-24 08:45:25 [main] INFO  ua.university.service.DepartmentService - Department updated: PHIL
+2026-04-24 08:51:13 [main] INFO  ua.university.io.DataStorageService - Data successfully loaded from: data\university-data.bin
+2026-04-24 08:51:13 [main] INFO  ua.university.service.FacultyService - Faculty updated: FIT
+2026-04-24 08:51:13 [main] INFO  ua.university.service.FacultyService - Faculty updated: FOZ
+2026-04-24 08:51:13 [main] INFO  ua.university.service.FacultyService - Faculty updated: FSNST
+2026-04-24 08:51:13 [main] INFO  ua.university.service.FacultyService - Faculty updated: FPSN
+2026-04-24 08:51:13 [main] INFO  ua.university.service.FacultyService - Faculty updated: FPN
+2026-04-24 08:51:13 [main] INFO  ua.university.service.FacultyService - Faculty updated: FGN
+2026-04-24 08:51:13 [main] INFO  ua.university.service.FacultyService - Faculty updated: FEN
+2026-04-24 08:51:13 [main] INFO  ua.university.service.DepartmentService - Department updated: INF
+2026-04-24 08:51:13 [main] INFO  ua.university.service.DepartmentService - Department updated: HIST
+2026-04-24 08:51:13 [main] INFO  ua.university.service.DepartmentService - Department updated: LAW
+2026-04-24 08:51:13 [main] INFO  ua.university.service.DepartmentService - Department updated: NT
+2026-04-24 08:51:13 [main] INFO  ua.university.service.DepartmentService - Department updated: MKT
+2026-04-24 08:51:13 [main] INFO  ua.university.service.DepartmentService - Department updated: FIN
+2026-04-24 08:51:13 [main] INFO  ua.university.service.DepartmentService - Department updated: MATH
+2026-04-24 08:51:13 [main] INFO  ua.university.service.DepartmentService - Department updated: ECON
+2026-04-24 08:51:13 [main] INFO  ua.university.service.DepartmentService - Department updated: PHIL
+2026-04-24 08:52:13 [Thread-0] INFO  ua.university.io.DataStorageService - Data successfully saved to: data\university-data.bin
+2026-04-24 09:03:28 [main] INFO  ua.university.io.DataStorageService - Data successfully loaded from: data\university-data.bin
+2026-04-24 09:03:28 [main] INFO  ua.university.service.FacultyService - Faculty updated: FIT
+2026-04-24 09:03:28 [main] INFO  ua.university.service.FacultyService - Faculty updated: FOZ
+2026-04-24 09:03:28 [main] INFO  ua.university.service.FacultyService - Faculty updated: FSNST
+2026-04-24 09:03:28 [main] INFO  ua.university.service.FacultyService - Faculty updated: FPSN
+2026-04-24 09:03:28 [main] INFO  ua.university.service.FacultyService - Faculty updated: FPN
+2026-04-24 09:03:28 [main] INFO  ua.university.service.FacultyService - Faculty updated: FGN
+2026-04-24 09:03:28 [main] INFO  ua.university.service.FacultyService - Faculty updated: FEN
+2026-04-24 09:03:28 [main] INFO  ua.university.service.DepartmentService - Department updated: INF
+2026-04-24 09:03:28 [main] INFO  ua.university.service.DepartmentService - Department updated: HIST
+2026-04-24 09:03:28 [main] INFO  ua.university.service.DepartmentService - Department updated: LAW
+2026-04-24 09:03:28 [main] INFO  ua.university.service.DepartmentService - Department updated: NT
+2026-04-24 09:03:28 [main] INFO  ua.university.service.DepartmentService - Department updated: MKT
+2026-04-24 09:03:28 [main] INFO  ua.university.service.DepartmentService - Department updated: FIN
+2026-04-24 09:03:28 [main] INFO  ua.university.service.DepartmentService - Department updated: MATH
+2026-04-24 09:03:28 [main] INFO  ua.university.service.DepartmentService - Department updated: ECON
+2026-04-24 09:03:28 [main] INFO  ua.university.service.DepartmentService - Department updated: PHIL
+2026-04-24 09:04:28 [Thread-0] INFO  ua.university.io.DataStorageService - Data successfully saved to: data\university-data.bin
+2026-04-24 09:05:28 [Thread-0] INFO  ua.university.io.DataStorageService - Data successfully saved to: data\university-data.bin
+2026-04-24 09:08:42 [main] INFO  ua.university.service.FacultyService - Faculty created: FIT
+2026-04-24 09:08:42 [main] INFO  ua.university.service.FacultyService - Faculty created: FGN
+2026-04-24 09:08:42 [main] INFO  ua.university.service.FacultyService - Faculty created: FEN
+2026-04-24 09:08:42 [main] INFO  ua.university.service.FacultyService - Faculty created: FPN
+2026-04-24 09:08:42 [main] INFO  ua.university.service.FacultyService - Faculty created: FPSN
+2026-04-24 09:08:42 [main] INFO  ua.university.service.FacultyService - Faculty created: FSNST
+2026-04-24 09:08:42 [main] INFO  ua.university.service.FacultyService - Faculty created: FOZ
+2026-04-24 09:08:42 [main] INFO  ua.university.service.TeacherService - Teacher created: Вовк Наталія Миколаївна (ID: T_VOVK)
+2026-04-24 09:08:42 [main] INFO  ua.university.service.TeacherService - Teacher created: Бажал Юрій Миколайович (ID: T_BAZHAL)
+2026-04-24 09:08:42 [main] INFO  ua.university.service.TeacherService - Teacher created: Глущенко Світлана Василівна (ID: T_HLUSH)
+2026-04-24 09:08:42 [main] INFO  ua.university.service.TeacherService - Teacher created: Заєць Анатолій Павлович (ID: T_ZAIETS)
+2026-04-24 09:08:42 [main] INFO  ua.university.service.TeacherService - Teacher created: Кобченко Наталія Віталіївна (ID: T_KOBCHENKO)
+2026-04-24 09:08:42 [main] INFO  ua.university.service.FacultyService - Department INF linked to faculty FIT
+2026-04-24 09:08:42 [main] INFO  ua.university.service.FacultyService - Department MATH linked to faculty FIT
+2026-04-24 09:08:42 [main] INFO  ua.university.service.FacultyService - Department NT linked to faculty FIT
+2026-04-24 09:08:42 [main] INFO  ua.university.service.FacultyService - Department FIN linked to faculty FEN
+2026-04-24 09:08:42 [main] INFO  ua.university.service.FacultyService - Department MKT linked to faculty FEN
+2026-04-24 09:08:42 [main] INFO  ua.university.service.FacultyService - Department ECON linked to faculty FEN
+2026-04-24 09:08:42 [main] INFO  ua.university.service.FacultyService - Department HIST linked to faculty FGN
+2026-04-24 09:08:42 [main] INFO  ua.university.service.FacultyService - Department PHIL linked to faculty FGN
+2026-04-24 09:08:42 [main] INFO  ua.university.service.FacultyService - Department LAW linked to faculty FPN
+2026-04-24 09:08:42 [main] INFO  ua.university.service.DepartmentService - Student 100001 added to department INF
+2026-04-24 09:08:42 [main] INFO  ua.university.service.DepartmentService - Student 1000004 added to department INF
+2026-04-24 09:08:42 [main] INFO  ua.university.service.DepartmentService - Student 100002 added to department INF
+2026-04-24 09:08:42 [main] INFO  ua.university.service.DepartmentService - Student 140004 added to department INF
+2026-04-24 09:13:45 [main] INFO  ua.university.service.FacultyService - Faculty created: FIT
+2026-04-24 09:13:45 [main] INFO  ua.university.service.FacultyService - Faculty created: FGN
+2026-04-24 09:13:45 [main] INFO  ua.university.service.FacultyService - Faculty created: FEN
+2026-04-24 09:13:45 [main] INFO  ua.university.service.FacultyService - Faculty created: FPN
+2026-04-24 09:13:45 [main] INFO  ua.university.service.FacultyService - Faculty created: FPSN
+2026-04-24 09:13:45 [main] INFO  ua.university.service.FacultyService - Faculty created: FSNST
+2026-04-24 09:13:45 [main] INFO  ua.university.service.FacultyService - Faculty created: FOZ
+2026-04-24 09:13:45 [main] INFO  ua.university.service.TeacherService - Teacher created: Вовк Наталія Миколаївна (ID: T_VOVK)
+2026-04-24 09:13:45 [main] INFO  ua.university.service.TeacherService - Teacher created: Бажал Юрій Миколайович (ID: T_BAZHAL)
+2026-04-24 09:13:45 [main] INFO  ua.university.service.TeacherService - Teacher created: Глущенко Світлана Василівна (ID: T_HLUSH)
+2026-04-24 09:13:45 [main] INFO  ua.university.service.TeacherService - Teacher created: Заєць Анатолій Павлович (ID: T_ZAIETS)
+2026-04-24 09:13:45 [main] INFO  ua.university.service.TeacherService - Teacher created: Кобченко Наталія Віталіївна (ID: T_KOBCHENKO)
+2026-04-24 09:13:46 [main] INFO  ua.university.service.FacultyService - Department INF linked to faculty FIT
+2026-04-24 09:13:46 [main] INFO  ua.university.service.FacultyService - Department MATH linked to faculty FIT
+2026-04-24 09:13:46 [main] INFO  ua.university.service.FacultyService - Department NT linked to faculty FIT
+2026-04-24 09:13:46 [main] INFO  ua.university.service.FacultyService - Department FIN linked to faculty FEN
+2026-04-24 09:13:46 [main] INFO  ua.university.service.FacultyService - Department MKT linked to faculty FEN
+2026-04-24 09:13:46 [main] INFO  ua.university.service.FacultyService - Department ECON linked to faculty FEN
+2026-04-24 09:13:46 [main] INFO  ua.university.service.FacultyService - Department HIST linked to faculty FGN
+2026-04-24 09:13:46 [main] INFO  ua.university.service.FacultyService - Department PHIL linked to faculty FGN
+2026-04-24 09:13:46 [main] INFO  ua.university.service.FacultyService - Department LAW linked to faculty FPN
+2026-04-24 09:13:46 [main] INFO  ua.university.service.DepartmentService - Student 100001 added to department INF
+2026-04-24 09:13:46 [main] INFO  ua.university.service.DepartmentService - Student 1000004 added to department INF
+2026-04-24 09:13:46 [main] INFO  ua.university.service.DepartmentService - Student 100002 added to department INF
+2026-04-24 09:13:46 [main] INFO  ua.university.service.DepartmentService - Student 140004 added to department INF
+2026-04-24 09:19:11 [main] INFO  ua.university.service.FacultyService - Faculty created: FIT
+2026-04-24 09:19:11 [main] INFO  ua.university.service.FacultyService - Faculty created: FGN
+2026-04-24 09:19:11 [main] INFO  ua.university.service.FacultyService - Faculty created: FEN
+2026-04-24 09:19:11 [main] INFO  ua.university.service.FacultyService - Faculty created: FPN
+2026-04-24 09:19:11 [main] INFO  ua.university.service.FacultyService - Faculty created: FPSN
+2026-04-24 09:19:11 [main] INFO  ua.university.service.FacultyService - Faculty created: FSNST
+2026-04-24 09:19:11 [main] INFO  ua.university.service.FacultyService - Faculty created: FOZ
+2026-04-24 09:19:11 [main] INFO  ua.university.service.TeacherService - Teacher created: Глибовець Андрій Миколайович (ID: DFIT)
+2026-04-24 09:19:11 [main] INFO  ua.university.service.TeacherService - Teacher created: Вовк Наталія Миколаївна (ID: T_VOVK)
+2026-04-24 09:19:11 [main] INFO  ua.university.service.TeacherService - Teacher created: Бажал Юрій Миколайович (ID: T_BAZHAL)
+2026-04-24 09:19:11 [main] INFO  ua.university.service.TeacherService - Teacher created: Глущенко Світлана Василівна (ID: T_HLUSH)
+2026-04-24 09:19:11 [main] INFO  ua.university.service.TeacherService - Teacher created: Заєць Анатолій Павлович (ID: T_ZAIETS)
+2026-04-24 09:19:11 [main] INFO  ua.university.service.TeacherService - Teacher created: Кобченко Наталія Віталіївна (ID: T_KOBCHENKO)
+2026-04-24 09:19:11 [main] INFO  ua.university.service.FacultyService - Department INF linked to faculty FIT
+2026-04-24 09:19:11 [main] INFO  ua.university.service.FacultyService - Department MATH linked to faculty FIT
+2026-04-24 09:19:11 [main] INFO  ua.university.service.FacultyService - Department NT linked to faculty FIT
+2026-04-24 09:19:11 [main] INFO  ua.university.service.FacultyService - Department FIN linked to faculty FEN
+2026-04-24 09:19:11 [main] INFO  ua.university.service.FacultyService - Department MKT linked to faculty FEN
+2026-04-24 09:19:11 [main] INFO  ua.university.service.FacultyService - Department ECON linked to faculty FEN
+2026-04-24 09:19:11 [main] INFO  ua.university.service.FacultyService - Department HIST linked to faculty FGN
+2026-04-24 09:19:11 [main] INFO  ua.university.service.FacultyService - Department PHIL linked to faculty FGN
+2026-04-24 09:19:11 [main] INFO  ua.university.service.FacultyService - Department LAW linked to faculty FPN
+2026-04-24 09:19:11 [main] INFO  ua.university.service.DepartmentService - Student 100001 added to department INF
+2026-04-24 09:19:11 [main] INFO  ua.university.service.DepartmentService - Student 1000004 added to department INF
+2026-04-24 09:19:11 [main] INFO  ua.university.service.DepartmentService - Student 100002 added to department INF
+2026-04-24 09:19:11 [main] INFO  ua.university.service.DepartmentService - Student 140004 added to department INF
+2026-04-24 09:20:11 [Thread-0] INFO  ua.university.io.DataStorageService - Data successfully saved to: data\university-data.bin
+2026-04-24 09:21:11 [Thread-0] INFO  ua.university.io.DataStorageService - Data successfully saved to: data\university-data.bin
+2026-04-24 09:22:11 [Thread-0] INFO  ua.university.io.DataStorageService - Data successfully saved to: data\university-data.bin

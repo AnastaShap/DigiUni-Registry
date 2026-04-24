@@ -19,6 +19,7 @@ public class AutoSaveService {
     private final FacultyService facultyService;
     private final DepartmentService departmentService;
     private final StudentService studentService;
+    private final TeacherService teacherService;
     private final ILogger logger;
 
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor(runnable -> {
@@ -32,7 +33,8 @@ public class AutoSaveService {
             try {
                 saveAllData();
             } catch (Exception e) {
-                logger.info("Auto-save failed: " + e.getMessage());
+                // Використовуємо \r\n або систему логування для чистого виводу в консоль
+                logger.info("\n[Auto-save Error]: " + e.getMessage());
             }
         }, intervalSeconds, intervalSeconds, TimeUnit.SECONDS);
     }
@@ -41,10 +43,16 @@ public class AutoSaveService {
         UniversityDataSnapshot snapshot = new UniversityDataSnapshot(
                 facultyService.findAll(),
                 departmentService.findAll(),
-                studentService.getAllStudents()
+                studentService.getAllStudents(),
+                teacherService.getAll()
         );
-        dataStorageService.save(dataFile, snapshot);
-        logger.info("[Auto-save]: Data successfully saved in background.");
+
+        try {
+            dataStorageService.save(dataFile, snapshot);
+            logger.info("\n[Auto-save]: Data successfully saved to " + dataFile.getFileName());
+        } catch (Exception e) {
+            logger.info("\n[Auto-save]: Critical error during file write: " + e.getMessage());
+        }
     }
 
     public void stop() {
