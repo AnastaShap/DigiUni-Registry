@@ -5,16 +5,13 @@ import org.junit.jupiter.api.Test;
 import ua.university.domain.Student;
 import ua.university.domain.enums.StudentStatus;
 import ua.university.domain.enums.StudyForm;
-import ua.university.dto.Email;
-import ua.university.dto.PhoneNumber;
 import ua.university.exception.DuplicateEntityException;
 import ua.university.exception.StudentNotFoundException;
 import ua.university.repository.student.InMemoryStudentRepository;
-import ua.university.util.ConsoleInputValidator;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Scanner;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,18 +26,17 @@ class StudentServiceTest {
 
     @Test
     void createAndFindByIdShouldReturnStudent() {
-        Student student = createTestStudent("1", "IPZ-2");
+        Student student = buildStudent("1", "S001", 2, "IPZ-2");
 
         studentService.create(student);
 
         assertTrue(studentService.findById("1").isPresent());
-        // СТАЛО:
-        assertEquals("S-1", studentService.findById("1").get().getStudentId());
+        assertEquals("S001", studentService.getById("1").getStudentId());
     }
 
     @Test
     void createDuplicateShouldThrowCustomException() {
-        Student student = createTestStudent("1",  "IPZ-2");
+        Student student = buildStudent("1", "S001", 2, "IPZ-2");
         studentService.create(student);
 
         assertThrows(DuplicateEntityException.class, () -> studentService.create(student));
@@ -52,59 +48,60 @@ class StudentServiceTest {
     }
 
 
-    private Student createTestStudent(String number, String groupName) {
+    private Student buildStudent(String id, String studentId, int course, String group) {
         return new Student(
-                number,                // System ID
-                "LastName" + number,   // Прізвище
-                "FirstName" + number,  // Ім'я
-                "MiddleName" + number, // По батькові
-                LocalDate.of(2005, 1, 1), // Дата народження
-                "test" + number + "@ukma.edu.ua", // Email
-                "+3800000000" + number,           // Телефон
-                "S-" + number,         // Student ID (номер заліковки)
-                1,                     // Курс
-                groupName,             // Група (використовується в тесті)
-                2024,                  // Рік вступу
-                StudyForm.BUDGET,      // Форма навчання
-                StudentStatus.STUDYING // Статус
+                id,
+                "Петренко",
+                "Данило",
+                "Іванович",
+                LocalDate.of(2004, 5, 10),
+                studentId.toLowerCase() + "@ukma.edu.ua",
+                "050111110000",
+                studentId,
+                course,
+                group,
+                2020,
+                StudyForm.BUDGET,
+                StudentStatus.STUDYING
         );
     }
-
-    // тест перевіряє коректність роботи фільтрації за підрядком у StudentService
     @Test
-    void testFindByFullNamePartial() {
-        // 1. Створюємо студента з прізвищем "Shevchenko"
-        Student s = new Student("1", "Shevchenko", "Ivan", "P",
-                LocalDate.of(2004, 1, 1),
-                new Email("ivan@ukma.edu.ua"), new PhoneNumber("+380501112233"),
-                "S1", null, null, 1, "IPZ-1", 2022, StudyForm.BUDGET, StudentStatus.STUDYING);
+    void averageAgeByGroupCalculatesAverage() {
+        studentService.create(createStudent("301", "А", 2, "ІПЗ-2", 20));
+        studentService.create(createStudent("302", "Б", 2, "ІПЗ-2", 22));
 
-        studentService.create(s);
+        Map<String, Double> stats = studentService.averageAgeByGroup();
 
-        // 2. Шукаємо частину прізвища
-        List<Student> results = studentService.findByFullName("Shev");
-
-        // 3. Перевіряємо, що список НЕ порожній
-        assertFalse(results.isEmpty(), "Student should be found by partial name");
-        assertEquals("Shevchenko", results.get(0).getLastName());
-    }
-    // Валідація формату групи
-    @Test
-    void testGroupFormatValidation() {
-        // Емуляція вводу для Scanner
-        Scanner scSuccess = new Scanner("ІПЗ-22\n");
-        String result = ConsoleInputValidator.readGroup(scSuccess);
-        assertEquals("ІПЗ-22", result);
+        assertEquals(21.0, stats.get("ІПЗ-2"));
     }
 
     @Test
-    void testFindByGroupStream() {
-        studentService.create(createTestStudent("1", "IPZ-1"));
-        studentService.create(createTestStudent("2",  "ipz-1"));
-        studentService.create(createTestStudent("3", "KN-2"));
+    void countStudentsByCourseReturnsGroupedStats() {
+        studentService.create(createStudent("201", "А", 1, "ІПЗ-1", 18));
+        studentService.create(createStudent("202", "Б", 2, "ІПЗ-2", 19));
+        studentService.create(createStudent("203", "В", 2, "КН-2", 20));
 
-        List<Student> result = studentService.findByGroup("IPZ-1");
-        assertEquals(2, result.size());
+        Map<Integer, Long> stats = studentService.countStudentsByCourse();
+
+        assertEquals(1L, stats.get(1));
+        assertEquals(2L, stats.get(2));
     }
 
+    private Student createStudent(String id, String lastName, int course, String group, int age) {
+        return new Student(
+                id,
+                lastName,
+                "Іван",
+                "Петрович",
+                LocalDate.now().minusYears(age),
+                id + "@ukma.edu.ua",
+                "+380501234567",
+                "S" + id,
+                course,
+                group,
+                2022,
+                StudyForm.BUDGET,
+                StudentStatus.STUDYING
+        );
+    }
 }

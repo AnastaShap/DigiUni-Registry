@@ -6,10 +6,9 @@ import ua.university.domain.Person;
 import ua.university.domain.Student;
 import ua.university.dto.Email;
 import ua.university.dto.PhoneNumber;
-import ua.university.security.AuthService;
-import ua.university.security.Permissions;
-import ua.university.security.RequiresPermission;
-import ua.university.service.*;
+import ua.university.service.DepartmentService;
+import ua.university.service.FacultyService;
+import ua.university.service.StudentService;
 import ua.university.util.ConsoleInputValidator;
 import ua.university.util.Logging.ILogger;
 import ua.university.util.StudentConsoleView;
@@ -27,13 +26,12 @@ public class StudentCRUDMenu {
 
     private final StudentInputHandler inputHandler;
     private final StudentSearchAndReportManager searchManager;
-    private final AuthService authService =  new  AuthService();
 
     public StudentCRUDMenu(StudentService studentService,
                            DepartmentService departmentService,
                            FacultyService facultyService,
                            ILogger logger,
-                           Scanner scanner /*AuthService authService*/) {
+                           Scanner scanner) {
         this.studentService = studentService;
         this.departmentService = departmentService;
         this.facultyService = facultyService;
@@ -43,7 +41,6 @@ public class StudentCRUDMenu {
         this.scanner = scanner;
 
         this.inputHandler = new StudentInputHandler(scanner, view);
-        //this.authService = authService;
         this.searchManager = new StudentSearchAndReportManager(studentService, view, scanner);
     }
 
@@ -127,12 +124,7 @@ public class StudentCRUDMenu {
         searchManager.showSearchMenu();
     }
 
-    @RequiresPermission(Permissions.DELETE_DATA)
-    public void deleteStudent(Person currentUser) {
-         //user = authService.getCurrentUser();
-        // reflections usage
-        if (!authService.checkAccess(this, "deleteStudent", logger)) return;
-
+    public void deleteStudent(Person user) {
         view.printMessage("Enter System ID to delete:");
         String id = scanner.nextLine().trim();
         try {
@@ -143,7 +135,6 @@ public class StudentCRUDMenu {
         }
     }
 
-    @RequiresPermission(Permissions.EDIT_DATA)
     public void updateStudent() {
         view.printMessage("Enter System ID to update:");
         String id = scanner.nextLine().trim();
