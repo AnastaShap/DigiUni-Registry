@@ -1,5 +1,6 @@
 package ua.university.security;
 
+import lombok.Setter;
 import ua.university.domain.Person;
 import ua.university.domain.enums.Role;
 import ua.university.util.Logging.ILogger;
@@ -11,6 +12,7 @@ import java.util.Map;
 public class AuthService {
 
     private final Map<String, User> users = new LinkedHashMap<>();
+    @Setter
     private Person currentUser;
 
     public AuthService() {

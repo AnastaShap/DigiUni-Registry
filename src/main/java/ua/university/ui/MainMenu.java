@@ -52,14 +52,14 @@ public class MainMenu {
     private final Path dataFile;
 
     private final AutoSaveService autoSaveService;
-    private final AuthService auth;
+
 
     public MainMenu(ILogger logger) {
-        this.auth = new AuthService();
+        this.authService = new AuthService();
         this.dataStorageService = new DataStorageService();
         this.dataFile = Path.of("data", "university-data.bin");
         this.scanner = new Scanner(System.in);
-        this.authService = new AuthService();
+
         this.accessManager = new AccessManager();
 
         // Ініціалізація репозиторіїв та сервісів
@@ -69,10 +69,10 @@ public class MainMenu {
         this.teacherService = new TeacherService(new InMemoryTeacherRepository());
 
 
-        this.facultyMenu = new FacultyCRUDMenu(facultyService, logger, scanner, auth);
-        this.departmentMenu = new DepartmentCRUDMenu(departmentService, facultyService, logger, scanner, auth);
+        this.facultyMenu = new FacultyCRUDMenu(facultyService, logger, scanner, authService);
+        this.departmentMenu = new DepartmentCRUDMenu(departmentService, facultyService, logger, scanner, authService);
         this.studentMenu = new StudentCRUDMenu(studentService, departmentService, facultyService, logger, scanner);
-        this.teacherMenu = new TeacherCRUDMenu(teacherService, logger, scanner, auth);
+        this.teacherMenu = new TeacherCRUDMenu(teacherService, logger, scanner, authService);
 
         this.autoSaveService = new AutoSaveService(
                 this.dataStorageService,
@@ -80,7 +80,9 @@ public class MainMenu {
                 this.facultyService,
                 this.departmentService,
                 this.studentService,
+                this.teacherService,
                 logger
+
         );
 
         loadOrSeedData();
@@ -91,21 +93,24 @@ public class MainMenu {
         if (dataStorageService.exists(dataFile)) {
             UniversityDataSnapshot snapshot = dataStorageService.load(dataFile);
             if (snapshot != null) {
-                // Використовуємо update, щоб не було DuplicateEntityException
                 snapshot.faculties().forEach(facultyService::update);
                 snapshot.departments().forEach(departmentService::update);
                 snapshot.students().forEach(studentService::update);
+                snapshot.teachers().forEach(teacherService::update);
+
                 System.out.println("Data loaded from file.");
                 return;
             }
         }
-        seedData();
+        seedData(); // Виконається тільки якщо файлу немає
     }
+
     private void saveData() {
         UniversityDataSnapshot snapshot = new UniversityDataSnapshot(
                 facultyService.findAll(),
                 departmentService.findAll(),
-                studentService.getAllStudents()
+                studentService.getAllStudents(),
+                teacherService.getAll()
         );
 
         dataStorageService.save(dataFile, snapshot);
@@ -117,7 +122,7 @@ public class MainMenu {
 
         while (true) {
             printMenu();
-            int option = ConsoleInputValidator.readMenuOption(scanner, 0, 18);
+            int option = ConsoleInputValidator.readMenuOption(scanner, 0, 21);
 
             try {
                 switch (option) {
@@ -218,6 +223,19 @@ public class MainMenu {
                 String password = scanner.nextLine().trim();
 
                 currentUser = authService.login(login, password);
+
+                Teacher sessionPerson = new Teacher(
+                        "session", "System", currentUser.getLogin(), "",
+                        LocalDate.now(), null, null, "User", "None", "None", LocalDate.now(), 1.0
+                );
+
+                // Конвертуємо Role в бітові маски (Permissions)
+                authService.assignPermissions(sessionPerson, currentUser.getRole());
+
+                // Передаємо персону в AuthService, щоб canExecute не видавав null
+                authService.setCurrentUser(sessionPerson);
+                // --------------------------------------------------------------
+
                 System.out.println("Успішний вхід: " + currentUser.getLogin() +
                         ", роль: " + currentUser.getRole());
                 return;
@@ -306,6 +324,40 @@ public class MainMenu {
                 LocalDate.of(1978, 1, 1),
                 new Email("a.glybovets@ukma.edu.ua"), new PhoneNumber("+380444636985"),
                 "Professor", "Dr. Sc.", "Academician", LocalDate.of(1990, 9, 1), 1.0);
+        teacherService.create(deanFit);
+
+        Teacher vovkNat = new Teacher("T_VOVK", "Вовк", "Наталія", "Миколаївна",
+                LocalDate.of(1970, 5, 12),
+                new Email("vovknj@ukma.edu.ua"), new PhoneNumber("+380444256057"),
+                "Старший викладач", "PhD", "Associate Professor", LocalDate.of(2005, 9, 1), 1.0);
+        teacherService.create(vovkNat);
+
+        // ФЕН
+        Teacher bazhalIur = new Teacher("T_BAZHAL", "Бажал", "Юрій", "Миколайович",
+                LocalDate.of(1952, 12, 1),
+                new Email("bazhal@ukma.edu.ua"), new PhoneNumber("+380444256042"),
+                "Завідувач кафедри", "Dr. Sc.", "Professor", LocalDate.of(1995, 9, 1), 1.0);
+        teacherService.create(bazhalIur);
+
+        Teacher hlushSvit = new Teacher("T_HLUSH", "Глущенко", "Світлана", "Василівна",
+                LocalDate.of(1965, 3, 15),
+                new Email("svitlana.hlushchenko@ukma.edu.ua"), new PhoneNumber("+380444257737"),
+                "Декан ФЕН", "PhD", "Associate Professor", LocalDate.of(2000, 9, 1), 1.0);
+        teacherService.create(hlushSvit);
+
+        // ФПрН
+        Teacher zaietsAnat = new Teacher("T_ZAIETS", "Заєць", "Анатолій", "Павлович",
+                LocalDate.of(1954, 7, 20),
+                new Email("zaietsap@ukma.edu.ua"), new PhoneNumber("+380444635927"),
+                "Професор", "Dr. Sc.", "Professor", LocalDate.of(2010, 9, 1), 1.0);
+        teacherService.create(zaietsAnat);
+
+        // ФГН
+        Teacher kobchenkoNat = new Teacher("T_KOBCHENKO", "Кобченко", "Наталія", "Віталіївна",
+                LocalDate.of(1975, 10, 5),
+                new Email("n.kobchenko@ukma.edu.ua"), new PhoneNumber("+380444256059"),
+                "Професор", "Dr. Sc.", "Professor", LocalDate.of(2008, 9, 1), 1.0);
+        teacherService.create(kobchenkoNat);
 
         // DEPARTMENTS
         // --- Кафедри ФІТ (Факультет інформаційних технологій) ---
@@ -390,13 +442,8 @@ public class MainMenu {
 
         // Замість student1.setDepartment(informatics);
         departmentService.addStudent("INF", student1);
-        // Замість student4.setDepartment(informatics);
         departmentService.addStudent("INF", student4);
-
-        // Замість student2.setDepartment(informatics);
         departmentService.addStudent("INF", student2);
-
-     // Замість student3.setDepartment(informatics);
         departmentService.addStudent("INF", student3);
     }
 

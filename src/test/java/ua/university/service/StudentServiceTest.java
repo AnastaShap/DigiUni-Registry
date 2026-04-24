@@ -11,6 +11,7 @@ import ua.university.repository.student.InMemoryStudentRepository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -60,6 +61,45 @@ class StudentServiceTest {
                 course,
                 group,
                 2020,
+                StudyForm.BUDGET,
+                StudentStatus.STUDYING
+        );
+    }
+    @Test
+    void averageAgeByGroupCalculatesAverage() {
+        studentService.create(createStudent("301", "А", 2, "ІПЗ-2", 20));
+        studentService.create(createStudent("302", "Б", 2, "ІПЗ-2", 22));
+
+        Map<String, Double> stats = studentService.averageAgeByGroup();
+
+        assertEquals(21.0, stats.get("ІПЗ-2"));
+    }
+
+    @Test
+    void countStudentsByCourseReturnsGroupedStats() {
+        studentService.create(createStudent("201", "А", 1, "ІПЗ-1", 18));
+        studentService.create(createStudent("202", "Б", 2, "ІПЗ-2", 19));
+        studentService.create(createStudent("203", "В", 2, "КН-2", 20));
+
+        Map<Integer, Long> stats = studentService.countStudentsByCourse();
+
+        assertEquals(1L, stats.get(1));
+        assertEquals(2L, stats.get(2));
+    }
+
+    private Student createStudent(String id, String lastName, int course, String group, int age) {
+        return new Student(
+                id,
+                lastName,
+                "Іван",
+                "Петрович",
+                LocalDate.now().minusYears(age),
+                id + "@ukma.edu.ua",
+                "+380501234567",
+                "S" + id,
+                course,
+                group,
+                2022,
                 StudyForm.BUDGET,
                 StudentStatus.STUDYING
         );
